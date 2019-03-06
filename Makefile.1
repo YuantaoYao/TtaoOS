@@ -1,0 +1,118 @@
+
+BOOT:=boot.asm
+LDR:=loader.asm
+KERNEL:=kernel.asm
+BOOT_BIN:=$(subst .asm,.bin,$(BOOT))
+LDR_BIN:=$(subst .asm,.bin,$(LDR))
+KERNEL_BIN:=$(subst .asm,.bin,$(KERNEL))
+
+IMG:=a.img
+FLOPPY:=/mnt/floppy/
+
+.PHONY : everything
+
+everything : $(BOOT_BIN) $(LDR_BIN) $(KERNEL_BIN)
+	ld -s -Ttext 0x30400 -m elf_i386 -o kernel.bin kernel.o string.o start.o kliba.o
+	dd if=$(BOOT_BIN) of=$(IMG) bs=512 count=1 conv=notrunc
+	sudo mount -o loop $(IMG) $(FLOPPY)
+	sudo cp $(LDR_BIN) $(FLOPPY) -v
+	sudo cp $(KERNEL_BIN) $(FLOPPY) -v
+	sudo umount $(FLOPPY)	
+	
+	
+$(BOOT_BIN) : $(BOOT)
+	nasm $< -o $@
+$(LDR_BIN) : $(LDR)
+	nasm $< -o $@
+$(KERNEL_BIN) : $(KERNEL) start.c string.asm
+	nasm -f elf $< -o $(subst .asm,.o,$(KERNEL))
+	nasm -f elf string.asm -o string.o
+	nasm -f elf kliba.asm -o kliba.o
+	#ld -m elf_i386 -s -Ttext 0x30400 -o $@ $(subst .asm,.o,$(KERNEL))
+	gcc -c -m32  -fno-builtin -o start.o start.c
+	
+clear:
+	rm -f $(BOOT_BIN) $(LDR_BIN) $(KERNEL_BIN) *.o bochsout.txt
+	
+	##################################################
+# Makefile of system
+##################################################
+# Director of system
+boot:=boot/
+include:=include/
+kernel:=kernel/
+lib:=lib/
+#KernelEntryPointPhyAddr
+ENTRYPOINT = 0x30400
+# Offset of entry point in kernel file
+ENTRYOFFSET = 0x400
+
+KERNEL:=kernel.asm
+KERNEL_BIN:=$(subst .asm,.bin,$(KERNEL))
+
+IMG:=a.img
+FLOPPY:=/mnt/floppy/
+
+ASM = nasm
+DASM = ndisasm
+CC = gcc
+LD = ld
+ASMBFLAGS = -I boot/include/
+ASMKFLAGS = -I include/ -f elf
+CFLAGS	  = -I include/ -c -m32  -fno-builtin
+LDFLAGS	  =	-s -Ttext $(ENTRYPOINT) -m elf_i386
+DASMFLAGS = -u -o $(ENTRYPOINT) -e $(ENTRYOFFSET)
+
+ORANGESBOOT	= boot/boot.bin boot/loader.bin
+ORANGESKERNEL	= kernel.bin
+OBJS		= kernel/kernel.o kernel/start.o lib/kliba.o lib/string.o
+DASMOUTPUT	= kernel.bin.asm
+
+.PHONY : everything final image clean realclean disasm all buildimg
+
+everything : $(ORANGESBOOT) $(ORANGESKERNEL)
+
+all : realclean everything
+
+final : all clean
+
+image : final buildimg
+
+clean :
+	rm -f $(OBJS)
+
+realclean :
+	rm -f $(OBJS) $(ORANGESBOOT) $(ORANGESKERNEL)
+
+disasm :
+	$(DASM) $(DASMFLAGS) $(ORANGESKERNEL) > $(DASMOUTPUT)
+	
+# This Program
+buildimg : boot/boot.bin boot/loader.bin $(boot)$(KERNEL_BIN)
+	dd if=boot/boot.bin of=$(IMG) bs=512 count=1 conv=notrunc
+	sudo mount -o loop $(IMG) $(FLOPPY)
+	sudo cp -fv boot/loader.bin $(FLOPPY) 
+	sudo cp -fv $(boot)$(KERNEL_BIN) $(FLOPPY) 
+	sudo umount $(FLOPPY)	
+	
+boot/boot.bin : boot/boot.asm boot/include/loader.inc boot/include/safe.inc boot/include/fat12hdr.inc
+	$(ASM) $(ASMBFLAGS) -o $@ $<
+	
+boot/loader.bin : boot/loader.asm boot/include/loader.inc \
+			boot/include/fat12hdr.inc boot/include/safe.inc
+	$(ASM) $(ASMBFLAGS) -o $@ $<
+	
+$(boot)$(KERNEL_BIN) : $(lib)string.o $(kernel)start.o $(lib)kliba.o $(kernel)kernel.o 
+	$(LD) -s -Ttext 0x30400 -m elf_i386 -o $@ $<
+	
+$(kernel)kernel.o : $(kernel)kernel.asm
+	$(ASM) $(ASMKFLAGS) -o $@ $<
+
+$(kernel)start.o : $(kernel)start.c $(include)type.h $(include)const.h $(include)protect.h
+	$(CC) $(CFLAGS) -o $@ $<
+
+$(lib)kliba.o : $(lib)kliba.asm
+	$(ASM) $(ASMKFLAGS) -o $@ $<
+
+$(lib)string.o : $(lib)string.asm
+	$(ASM) $(ASMKFLAGS) -o $@ $<
