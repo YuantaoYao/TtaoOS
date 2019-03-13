@@ -25,7 +25,7 @@ f_img:=a.img
 #parament of system
 p_bootinclude = -I boot/include/
 p_include = -I include/ -f elf
-p_gccflags	  = -I include/ -c -m32  -fno-builtin
+p_gccflags	  = -I include/ -c -m32  -fno-builtin -fno-stack-protector
 p_ldflags	  = -m elf_i386	-s -Ttext $(v_entrypoint)
 
 install : image cleanall
@@ -56,13 +56,19 @@ buildimg : $(d_kernel)kernel.bin
 bootstrap:
 	(cd boot/; make)
 	
-$(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o
-	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o
+$(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o 
+	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o 
 	
 $(d_kernel)kernel.o : $(d_kernel)kernel.asm $(d_kernel)start.c
 	$(ASM) $(p_include) -o $@ $<
 
-$(d_kernel)start.o : $(d_kernel)start.c $(d_include)type.h $(d_include)const.h $(d_include)protect.h $(d_include)string.h
+$(d_kernel)start.o : $(d_kernel)start.c
+	$(CC) $(p_gccflags) -o $@ $<
+
+$(d_kernel)protect.o : $(d_kernel)protect.c
+	$(CC) $(p_gccflags) -o $@ $<
+
+$(d_lib)klib.o :$(d_lib)klib.c
 	$(CC) $(p_gccflags) -o $@ $<
 
 $(d_lib)string.o : $(d_lib)string.asm
