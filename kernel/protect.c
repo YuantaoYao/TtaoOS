@@ -4,7 +4,6 @@
 #include "func.h"
 
 void divide_error();
-void divide_error();
 void single_step_exception();
 void nmi();
 void breakpoint_exception();
@@ -21,14 +20,37 @@ void general_protection();
 void page_fault();
 void copr_error();
 
+/*-----define start--------*/
 PRIVATE void init_idt_desc(unsigned char vector, u8 desc_type,
 			  int_handler handler, unsigned char privilege);
+			  
+/*-----define end--------*/
 			  
 /*======================================================================*
                             init_prot
  *======================================================================*/
 PUBLIC void init_protect(){
+		
+	Init8259A();
+
 	init_idt_desc(INT_VECTOR_DIVIDE, DA_386IGate, divide_error, PRIVILEGE_KRNL);
+	init_idt_desc(INT_VECTOR_DEBUG, DA_386IGate, single_step_exception, PRIVILEGE_KRNL);		
+	init_idt_desc(INT_VECTOR_NMI, DA_386IGate, nmi, PRIVILEGE_KRNL);			
+	init_idt_desc(INT_VECTOR_BREAKPOINT, DA_386IGate, breakpoint_exception, PRIVILEGE_USER);	
+	init_idt_desc(INT_VECTOR_OVERFLOW, DA_386IGate, overflow, PRIVILEGE_USER);		
+	init_idt_desc(INT_VECTOR_BOUNDS, DA_386IGate, bounds_check, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_INVAL_OP, DA_386IGate, inval_opcode, PRIVILEGE_KRNL);		
+	init_idt_desc(INT_VECTOR_COPROC_NOT, DA_386IGate, copr_not_available, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_DOUBLE_FAULT, DA_386IGate, double_fault, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_COPROC_SEG, DA_386IGate, copr_seg_overrun, PRIVILEGE_KRNL);
+	init_idt_desc(INT_VECTOR_INVAL_TSS, DA_386IGate, inval_tss, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_SEG_NOT, DA_386IGate, segment_not_present, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_STACK_FAULT, DA_386IGate, stack_exception, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_PROTECTION, DA_386IGate, general_protection, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_PAGE_FAULT, DA_386IGate, page_fault, PRIVILEGE_KRNL);	
+	init_idt_desc(INT_VECTOR_COPROC_ERR, DA_386IGate, copr_error, PRIVILEGE_KRNL);	
+	
+	
 }
 /*======================================================================*
                              init_idt_desc
@@ -39,8 +61,11 @@ PRIVATE void init_idt_desc(unsigned char vector, u8 desc_type,
 			  int_handler handler, unsigned char privilege){
 	GATE * p_gate = &idt[vector];
 	u32 base = (u32)handler;
-	disp_color_str("into interrupt", 0x74);
-	 
+	p_gate->offset_low	=	base & 0xFFFF;
+	p_gate->selector	=	SELECTOR_KERNEL_CS;
+	p_gate->dcount		=	0;
+	p_gate->attr		=	desc_type |	(privilege << 5);
+	p_gate->offset_high	=	(base >> 16) & 0xFFFF;	 
  }
  /*======================================================================*
                             exception_handler
