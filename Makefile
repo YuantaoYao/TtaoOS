@@ -56,8 +56,8 @@ buildimg : $(d_kernel)kernel.bin
 bootstrap:
 	(cd boot/; make)
 	
-$(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o $(d_kernel)8259A.o 
-	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o $(d_kernel)8259A.o 
+$(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o	
+	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o	
 	
 $(d_kernel)kernel.o : $(d_kernel)kernel.asm $(d_kernel)start.c
 	$(ASM) $(p_include) -o $@ $<
@@ -65,13 +65,16 @@ $(d_kernel)kernel.o : $(d_kernel)kernel.asm $(d_kernel)start.c
 $(d_kernel)start.o : $(d_kernel)start.c
 	$(CC) $(p_gccflags) -o $@ $<
 
-$(d_kernel)protect.o : $(d_kernel)protect.c
-	$(CC) $(p_gccflags) -o $@ $<
-	
 $(d_kernel)8259A.o : $(d_kernel)8259A.c
 	$(CC) $(p_gccflags) -o $@ $<
 
 $(d_lib)klib.o :$(d_lib)klib.c
+	$(CC) $(p_gccflags) -o $@ $<
+
+$(d_kernel)protectint.o : $(d_kernel)protect.asm $(d_kernel)protect.c
+	$(ASM) $(p_include) -o $@ $<
+
+$(d_kernel)protect.o : $(d_kernel)protect.c
 	$(CC) $(p_gccflags) -o $@ $<
 
 $(d_lib)string.o : $(d_lib)string.asm
@@ -79,3 +82,6 @@ $(d_lib)string.o : $(d_lib)string.asm
 
 $(d_lib)kliba.o : $(d_lib)kliba.asm
 	$(ASM) -f elf  -o $@ $<
+	
+	
+# 需要链接的文件	

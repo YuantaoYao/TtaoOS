@@ -14,4 +14,5 @@ PUBLIC void init_protect();
 PUBLIC void Init8259A();
 
 PUBLIC void out_port(u16 port, u8 value);
+
 #endif
