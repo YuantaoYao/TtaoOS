@@ -14,3 +14,10 @@ PUBLIC void Init8259A(){
 	out_port(INT_M_CTLMASK, 0xFF);
 	out_port(INT_S_CTLMASK, 0xFF);
 }
+
+// 输出中断序号
+PUBLIC void spurious_irq(int irq){
+	disp_str("spurious_irq: ");
+	disp_int(irq);
+	disp_str("/n");
+}
