@@ -15,4 +15,6 @@ PUBLIC void Init8259A();
 
 PUBLIC void out_port(u16 port, u8 value);
 
+PUBLIC void spurious_irq(int irq);
+
 #endif
