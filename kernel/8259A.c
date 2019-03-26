@@ -2,6 +2,7 @@
 #include "type.h"
 #include "func.h"
 
+
 PUBLIC void Init8259A(){
 	out_port(INT_M_CTL, 0x11);
 	out_port(INT_S_CTL, 0x11);
@@ -11,7 +12,7 @@ PUBLIC void Init8259A(){
 	out_port(INT_S_CTLMASK, 0x2);
 	out_port(INT_M_CTLMASK, 0x1);
 	out_port(INT_S_CTLMASK, 0x1);
-	out_port(INT_M_CTLMASK, 0xFF);
+	out_port(INT_M_CTLMASK, 0xFD);
 	out_port(INT_S_CTLMASK, 0xFF);
 }
 
@@ -19,5 +20,5 @@ PUBLIC void Init8259A(){
 PUBLIC void spurious_irq(int irq){
 	disp_str("spurious_irq: ");
 	disp_int(irq);
-	disp_str("/n");
+	disp_str("\n");
 }

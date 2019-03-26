@@ -3,6 +3,22 @@
 #include "protect.h"
 #include "func.h"
 
+void hwint00();
+void hwint01();
+void hwint02();
+void hwint03();
+void hwint04();
+void hwint05();
+void hwint06();
+void hwint07();
+void hwint08();
+void hwint09();
+void hwint0A();
+void hwint0B();
+void hwint0C();
+void hwint0D();
+void hwint0E();
+void hwint0F();
 void divide_error();
 void single_step_exception();
 void nmi();
@@ -50,7 +66,23 @@ PUBLIC void init_protect(){
 	init_idt_desc(INT_VECTOR_PAGE_FAULT, DA_386IGate, page_fault, PRIVILEGE_KRNL);	
 	init_idt_desc(INT_VECTOR_COPROC_ERR, DA_386IGate, copr_error, PRIVILEGE_KRNL);	
 	
-	
+	/* 添加中断向量 */
+	init_idt_desc( INT_VECTOR_IRQ0 + 0, DA_386IGate, hwint00, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 1, DA_386IGate, hwint01, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 2, DA_386IGate, hwint02, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 3, DA_386IGate, hwint03, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 4, DA_386IGate, hwint04, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 5, DA_386IGate, hwint05, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 6, DA_386IGate, hwint06, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ0 + 7, DA_386IGate, hwint07, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 0, DA_386IGate, hwint08, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 1, DA_386IGate, hwint09, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 2, DA_386IGate, hwint0A, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 3, DA_386IGate, hwint0B, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 4, DA_386IGate, hwint0C, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 5, DA_386IGate, hwint0D, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 6, DA_386IGate, hwint0E, PRIVILEGE_KRNL);
+	init_idt_desc( INT_VECTOR_IRQ8 + 7, DA_386IGate, hwint0F, PRIVILEGE_KRNL);
 }
 /*======================================================================*
                              init_idt_desc

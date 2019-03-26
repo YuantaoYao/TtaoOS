@@ -17,6 +17,20 @@ global hwint0D
 global hwint0E
 global hwint0F
 
+%macro irq_master 1
+	push %1
+	call spurious_irq
+	add esp, 4
+	hlt
+%endmacro
+
+%macro irq_slave 1
+	push %1
+	call spurious_irq
+	add esp, 4
+	hlt
+%endmacro
+
 ALIGN 16
 hwint00:
 	irq_master 0
@@ -80,17 +94,3 @@ hwint0E:
 ALIGN 16
 hwint0F:
 	irq_slave 15
-
-%macro irq_master 1
-	push %1
-	call spurious_irq
-	add esp, 4
-	hlt
-%endmacro
-
-%macro irq_slave 1
-	push %1
-	call spurious_irq
-	add esp, 4
-	hlt
-%endmacro

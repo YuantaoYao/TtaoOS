@@ -29,11 +29,13 @@ _start:	; 跳到这里来的时候，我们假设 gs 指向显存
 
 	jmp	SELECTOR_KERNEL_CS:csinit
 csinit:
-	ud2
-	jmp 0x40:0
+	
+	sti
+	hlt
+	; ud2
+	; jmp 0x40:0
 
 	; push	0
 	; popfd
 	
-	hlt
 	

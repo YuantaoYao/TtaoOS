@@ -24,6 +24,6 @@ PUBLIC void cstart(){
 	
 	init_protect();
 	
-	disp_str("end;");
+	/* disp_str("end;"); */
 
 }
