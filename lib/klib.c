@@ -42,3 +42,12 @@ PUBLIC char * itoa(char * str, int num){
 
 	return str;
 }
+
+PUBLIC void sleep(int time){
+	int i,k,j;
+	for(i = 0;i < time;i++){
+		for(k = 0;k < 30;k++){
+			for(j = 0;j < 1000;j++){}
+		}
+	}
+}

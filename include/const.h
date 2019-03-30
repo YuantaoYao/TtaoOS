@@ -8,6 +8,8 @@
 #define	GDT_SIZE	128
 #define	IDT_SIZE	256
 
+#define LDT_SIZE	2  /* 每个进程中局部描述符的个数 */
+#define	NR_TASKS	1  /* 定义允许的最大进程数 */
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */
 #define	PRIVILEGE_TASK	1 /* */
@@ -25,18 +27,40 @@
 /* GDT */
 /* 描述符索引 */
 #define	INDEX_DUMMY		0	// ┓
-#define	INDEX_FLAT_C		1	// ┣ LOADER 里面已经确定了的.
-#define	INDEX_FLAT_RW		2	// ┃
+#define	INDEX_FLAT_C	1	// ┣ LOADER 里面已经确定了的.
+#define	INDEX_FLAT_RW	2	// ┃
 #define	INDEX_VIDEO		3	// ┛
+#define	INDEX_TSS		4
+#define	INDEX_LDT_FIRST	5	
+
 /* 选择子 */
 #define	SELECTOR_DUMMY		   0		// ┓
 #define	SELECTOR_FLAT_C		0x08		// ┣ LOADER 里面已经确定了的.
 #define	SELECTOR_FLAT_RW	0x10		// ┃
 #define	SELECTOR_VIDEO		(0x18+3)	// ┛<-- RPL=3
+#define	SELECTOR_TSS		0x20		/* TSS */
+#define SELECTOR_LDT_FIRST	0x28
+
 
 #define	SELECTOR_KERNEL_CS	SELECTOR_FLAT_C
 #define	SELECTOR_KERNEL_DS	SELECTOR_FLAT_RW
+#define SELECTOR_KERNEL_GS	SELECTOR_VIDEO	
 
+/* 选择子类型值说明 */
+#define	SA_RPL_MASK	0xFFFC
+#define	SA_RPL0	0
+#define	SA_RPL1	1
+#define	SA_RPL2	2
+#define	SA_RPL3	3
+
+/* RPL */
+#define	RPL_KRNL	SA_RPL0
+#define	RPL_TASK	SA_RPL1
+#define	RPL_USER	SA_RPL3
+
+#define	SA_TI_MASK	0xFFFB
+#define	SA_TIG	0
+#define	SA_TIL	4
 
 /* 描述符类型值说明 */
 #define	DA_32			0x4000	/* 32 位段				*/
@@ -82,4 +106,10 @@
 /* 中断向量 */
 #define	INT_VECTOR_IRQ0			0x20
 #define	INT_VECTOR_IRQ8			0x28
+
+/* 系统调用 */
+#define	INT_VECTOR_SYS_CALL		0x90
+
+#define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
+
 #endif

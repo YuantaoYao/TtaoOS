@@ -4,12 +4,12 @@
 #define	EXTERN
 
 typedef struct s_descriptor{
-	u16	limit_low;
-	u16 base_low;
-	u8	base_mid;
-	u8	attr1;
-	u8	limit_high_attr2;
-	u8	base_high;
+	u16	limit_low;     //段界限  	（2字段）
+	u16 base_low;      //段基址 1	（2字段）
+	u8	base_mid;		//段基址 2	（1字段）
+	u8	attr1;			// 属性 1
+	u8	limit_high_attr2; //段界限 2 + 属性 2
+	u8	base_high;		//段基址 3
 }DESCRIPTOR;
 
 typedef struct s_gate{

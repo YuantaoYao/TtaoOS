@@ -1,11 +1,14 @@
 SELECTOR_KERNEL_CS	equ	8
+SELECTOR_TSS		equ	0x20
+ 
 
 extern	cstart
-
+extern kernel_main
 
 extern	gdt_ptr
 extern	idt_ptr
 extern	disp_pos
+
 [section .bss]
 StackSpace		resb 	2 * 1024
 StackTop:		
@@ -29,6 +32,11 @@ _start:	; 跳到这里来的时候，我们假设 gs 指向显存
 
 	jmp	SELECTOR_KERNEL_CS:csinit
 csinit:
+	xor	eax, eax
+	mov ax, SELECTOR_TSS
+	ltr ax
+	
+	call kernel_main
 	
 	sti
 	hlt
@@ -37,5 +45,4 @@ csinit:
 
 	; push	0
 	; popfd
-	
 	

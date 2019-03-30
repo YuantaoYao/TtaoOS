@@ -3,6 +3,7 @@ extern	disp_pos
 global  disp_str
 global  disp_color_str
 global	memcpy
+global  memset
 ; ========================================================================
 ;                  void disp_str(char * info);
 ; ========================================================================
@@ -74,6 +75,39 @@ disp_color_str:
 	mov [disp_pos], edi
 	pop ebp
 	ret	
+	
+;-------------------------------------------------------------------------
+; void memset(void* p_dst, char ch, int size); 格式化
+;-------------------------------------------------------------------------	
+
+memset:
+	push ebp
+	mov ebp, esp
+	
+	push esi
+	push edi
+	push ecx	
+	
+	mov edi, [ebp + 8]
+	mov edx, [ebp + 12]
+	mov ecx, [ebp + 16]
+
+.1:
+	cmp ecx, 0
+	jz .2
+	
+	mov byte [edi], dl
+	inc edi
+	dec ecx
+	jmp .1
+	
+.2:
+	pop ecx
+	pop edi
+	pop esi
+	mov esp, ebp
+	pop ebp
+	ret
 	
 ; ------------------------------------------------------------------------
 ; void* memcpy(void* es:pDest, void* ds:pSrc, int iSize);
