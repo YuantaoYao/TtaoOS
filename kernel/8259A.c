@@ -12,7 +12,7 @@ PUBLIC void Init8259A(){
 	out_port(INT_S_CTLMASK, 0x2);
 	out_port(INT_M_CTLMASK, 0x1);
 	out_port(INT_S_CTLMASK, 0x1);
-	out_port(INT_M_CTLMASK, 0xFD);
+	out_port(INT_M_CTLMASK, 0xFF);
 	out_port(INT_S_CTLMASK, 0xFF);
 }
 

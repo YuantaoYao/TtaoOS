@@ -9,7 +9,7 @@ ESIREG		equ	EDIREG + 4
 EBPREG		equ	ESIREG + 4
 KERNELESPREG	equ EBPREG + 4
 EBXREG		equ	KERNELESPREG + 4
-EDXREG		equ	EBPREG + 4
+EDXREG		equ	EBXREG + 4
 ECXREG		equ	EDXREG + 4
 EAXREG		equ ECXREG + 4
 RETADR		equ EAXREG + 4
@@ -27,7 +27,6 @@ SELECTOR_LDT_FIRST equ 0x28
 
 extern p_proc_ready
 extern tss
-extern TestA
 global restart
 ;===============================================================
 ;                       save
@@ -73,13 +72,11 @@ global restart
 ;===============================================================
 restart:
 	mov esp, [p_proc_ready]
-	mov ax, SELECTOR_LDT_FIRST
-	lldt	ax
-	jmp TestA
+	lldt [esp + P_LDT_SEL]
 	lea eax, [esp + P_STACKTOP]
 	mov dword [tss + TSS3_S_SP0], eax
 	pop gs
-	pop gs
+	pop fs
 	pop es
 	pop ds
 	popad

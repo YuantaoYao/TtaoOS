@@ -7,10 +7,7 @@
 void TestA();
 
 PUBLIC void kernel_main(){
-	disp_str("------------------start kernel main--------------------\n");
-	disp_str("f");
 	PROCESS * p_proc = proc_table;
-	disp_str("g");
 	p_proc->ldt_sel = SELECTOR_LDT_FIRST;
 	memcpy(&p_proc->ldts[0], &gdt[SELECTOR_KERNEL_CS >> 3], sizeof(DESCRIPTOR));
 	p_proc->ldts[0].attr1 = DA_C | PRIVILEGE_TASK << 5;
@@ -26,7 +23,6 @@ PUBLIC void kernel_main(){
 	p_proc->regs.esp = (u32)task_stack + STACK_SIZE_TOTAL;
 	p_proc->regs.eflags = 0x1202;
 	p_proc_ready = proc_table;
-	disp_str("h");
 	restart(); 
 	
 }
