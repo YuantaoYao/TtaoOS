@@ -79,7 +79,7 @@ $(d_kernel)8259Aint.o : $(d_kernel)8259A.asm $(d_kernel)8259A.c
 $(d_kernel)8259A.o : $(d_kernel)8259A.c
 	$(CC) $(p_gccflags) -o $@ $<
 
-$(d_kernel)process.o : $(d_kernel)process.asm
+$(d_kernel)process.o : $(d_kernel)process.asm 
 	$(ASM) $(p_include) -o $@ $<
 
 $(d_kernel)protectint.o : $(d_kernel)protect.asm $(d_kernel)protect.c

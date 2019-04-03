@@ -1,4 +1,6 @@
 extern spurious_irq
+extern tss
+extern stackLoop
 
 global hwint00
 global hwint01
@@ -17,6 +19,15 @@ global hwint0D
 global hwint0E
 global hwint0F
 
+%include "kernel/include/proc.inc"
+
+INT_M_CTL			equ	0x20 
+INT_M_CTLMASK		equ	0x21 
+INT_S_CTL			equ	0xA0 
+INT_S_CTLMASK		equ	0xA1 
+
+EOI					equ	0x20
+
 %macro irq_master 1
 	push %1
 	call spurious_irq
@@ -33,7 +44,33 @@ global hwint0F
 
 ALIGN 16
 hwint00:
-	irq_master 0
+	sub esp, 4
+	pushad
+	push ds
+	push es
+	push fs
+	push gs
+	mov dx, ss
+	mov ds, dx
+	mov es, dx
+	
+	call stackLoop
+	
+	mov al, EOI
+	out INT_M_CTL, al
+	
+	inc byte [gs:0]
+	
+	lea eax, [esp + P_STACKTOP]
+	mov dword [tss + TSS3_S_SP0], eax
+	
+	pop gs
+	pop fs
+	pop es
+	pop ds
+	popad
+	add esp, 4
+	iretd
 	
 ALIGN 16
 hwint01:
