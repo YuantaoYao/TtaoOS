@@ -1,6 +1,8 @@
 extern spurious_irq
 extern tss
 extern stackLoop
+extern StackTop
+extern p_proc_ready
 
 global hwint00
 global hwint01
@@ -56,10 +58,15 @@ hwint00:
 	
 	call stackLoop
 	
+	mov esp, StackTop ;将栈顶指向另一块空闲区域防止进程栈被破坏
+
+	inc byte [gs:0]
+	
 	mov al, EOI
 	out INT_M_CTL, al
 	
-	inc byte [gs:0]
+	mov esp, [p_proc_ready]
+	
 	
 	lea eax, [esp + P_STACKTOP]
 	mov dword [tss + TSS3_S_SP0], eax

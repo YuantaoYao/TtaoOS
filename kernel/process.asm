@@ -47,6 +47,7 @@ global restart
 restart:
 	mov esp, [p_proc_ready]
 	lldt [esp + P_LDT_SEL]
+	
 	lea eax, [esp + P_STACKTOP]
 	mov dword [tss + TSS3_S_SP0], eax
 	pop gs

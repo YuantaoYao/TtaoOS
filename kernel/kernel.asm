@@ -9,6 +9,8 @@ extern	gdt_ptr
 extern	idt_ptr
 extern	disp_pos
 
+global StackTop
+
 [section .bss]
 StackSpace		resb 	2 * 1024
 StackTop:		
