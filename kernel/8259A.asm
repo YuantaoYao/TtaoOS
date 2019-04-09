@@ -56,14 +56,18 @@ hwint00:
 	mov ds, dx
 	mov es, dx
 	
-	call stackLoop
-	
 	mov esp, StackTop ;将栈顶指向另一块空闲区域防止进程栈被破坏
+
+	sti
+
+	call stackLoop
 
 	inc byte [gs:0]
 	
 	mov al, EOI
 	out INT_M_CTL, al
+	
+	cli
 	
 	mov esp, [p_proc_ready]
 	

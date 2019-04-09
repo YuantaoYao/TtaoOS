@@ -12,8 +12,8 @@ PUBLIC void Init8259A(){
 	out_port(INT_S_CTLMASK, 0x2);
 	out_port(INT_M_CTLMASK, 0x1);
 	out_port(INT_S_CTLMASK, 0x1);
-	out_port(INT_M_CTLMASK, 0xFE);
-	out_port(INT_S_CTLMASK, 0xFF);
+	out_port(INT_M_CTLMASK, 0xFC);
+	out_port(INT_S_CTLMASK, 0xFC);
 }
 
 // 输出中断序号
@@ -24,5 +24,8 @@ PUBLIC void spurious_irq(int irq){
 }
 
 PUBLIC void stackLoop(){
-	
+	disp_str("^");
+	int i=0;
+	int b=1;
+	int c = i + b;
 }
