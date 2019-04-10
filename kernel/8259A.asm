@@ -1,8 +1,10 @@
 extern spurious_irq
 extern tss
-extern stackLoop
 extern StackTop
 extern p_proc_ready
+extern sleep
+extern k_reenter
+extern clock_handler
 
 global hwint00
 global hwint01
@@ -55,25 +57,34 @@ hwint00:
 	mov dx, ss
 	mov ds, dx
 	mov es, dx
+
+	inc byte [gs:0]
+
+	mov al, EOI
+	out INT_M_CTL, al
+		
+	inc dword [k_reenter]
+	cmp dword [k_reenter], 0
+	jne	.re_enter
 	
 	mov esp, StackTop ;将栈顶指向另一块空闲区域防止进程栈被破坏
 
 	sti
-
-	call stackLoop
-
-	inc byte [gs:0]
 	
-	mov al, EOI
-	out INT_M_CTL, al
+; 程序代码----start----
+		
+	call clock_handler
+	
+; 程序代码----end----
 	
 	cli
 	
 	mov esp, [p_proc_ready]
-	
-	
+	lldt [esp + P_LDT_SEL]	
 	lea eax, [esp + P_STACKTOP]
 	mov dword [tss + TSS3_S_SP0], eax
+.re_enter:
+	dec dword [k_reenter]
 	
 	pop gs
 	pop fs

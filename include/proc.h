@@ -57,20 +57,17 @@ typedef struct s_process{
 	char name[16];	 //进程名称
 }PROCESS;
 
-/* typedef struct s_task{
-	task_f initial_eip;
-	int stacksize;
-	char	name[32];
-}TASK
- */
- 
-#define STACK_SIZE_TESTA	0x8000
- 
-#define STACK_SIZE_TOTAL	STACK_SIZE_TESTA
+typedef struct s_task{
+	task_f initial_eip; //任务地址
+	int stacksize;  //任务堆栈 
+	char name[32];  //任务名
+}TASK;
+
+extern char task_stack[];
  
 extern PROCESS proc_table[];
 
-extern char task_stack[];
+extern TASK task_table[];
 
 EXTERN PROCESS* p_proc_ready;
 

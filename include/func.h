@@ -27,4 +27,13 @@ PUBLIC void init_idt_desc(unsigned char vector, u8 desc_type, int_handler handle
 
 PUBLIC u32 seg2phys(u16 seg);	
 
+PUBLIC void clock_handler(int irq);
+
+PUBLIC void TestA();
+
+PUBLIC void TestB();
+
+PUBLIC void TestC();
+
+PUBLIC void * strcpy(char* p_dst, char* p_src);
 #endif

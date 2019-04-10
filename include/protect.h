@@ -24,6 +24,7 @@ typedef struct s_gate{
 	u16	offset_high;
 }GATE;
 
+EXTERN int k_reenter;
 
 EXTERN int disp_pos;
 

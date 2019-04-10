@@ -1,7 +1,7 @@
 #include "const.h"
 #include "type.h"
 #include "func.h"
-PUBLIC void stackLoop();
+
 int i = 0;
 PUBLIC void Init8259A(){
 	out_port(INT_M_CTL, 0x11);
@@ -21,11 +21,4 @@ PUBLIC void spurious_irq(int irq){
 	disp_str("spurious_irq: ");
 	disp_int(irq);
 	disp_str("\n");
-}
-
-PUBLIC void stackLoop(){
-	disp_str("^");
-	int i=0;
-	int b=1;
-	int c = i + b;
 }

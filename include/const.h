@@ -9,7 +9,15 @@
 #define	IDT_SIZE	256
 
 #define LDT_SIZE	2  /* 每个进程中局部描述符的个数 */
-#define	NR_TASKS	1  /* 定义允许的最大进程数 */
+
+#define	NR_TASKS	3  /* 定义允许的最大进程数 */
+
+#define STACK_SIZE_TESTA 0x8000
+#define STACK_SIZE_TESTB 0x8000	
+#define STACK_SIZE_TESTC 0x8000	
+
+#define STACK_SIZE_TOTAL	STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
+
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */
 #define	PRIVILEGE_TASK	1 /* */
