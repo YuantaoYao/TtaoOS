@@ -42,25 +42,26 @@ PUBLIC void kernel_main(){
 }
 
 void TestA(){
-	int i = 0;
+
 	while(1){
 		disp_str("A");
-		sleep(1 * 500);
+		sleep(100);
+		disp_int(12);
 	}
 }
 
 void TestB(){
-	
+
 	while(1){
-		disp_str("B");
-		sleep(1 * 100);
+		//disp_str("E");
+		sleep(100);
 	}
 }
 
 void TestC(){
-	
+	 
 	while(1){
-		disp_str("C");
-		sleep(1 * 100);
+		//disp_str("C");
+		sleep(100);
 	}
 }

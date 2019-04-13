@@ -44,10 +44,9 @@ EOI					equ	0x20
 	call spurious_irq
 	add esp, 4
 	hlt
-%endmacro
+%endmacro 
 
-ALIGN 16
-hwint00:
+save:
 	sub esp, 4
 	pushad
 	push ds
@@ -57,6 +56,31 @@ hwint00:
 	mov dx, ss
 	mov ds, dx
 	mov es, dx
+	
+	mov esi, esp
+	
+	inc dword [k_reenter]
+	cmp dword [k_reenter], 0
+	jne ignore
+	mov esp, StackTop
+	
+	
+ignore:
+	
+	
+	iretd
+
+%macro hwint_master 1
+	sub esp, 4
+	pushad
+	push ds
+	push es
+	push fs
+	push gs
+	mov dx, ss
+	mov ds, dx
+	mov es, dx
+	
 
 	inc byte [gs:0]
 
@@ -65,25 +89,38 @@ hwint00:
 		
 	inc dword [k_reenter]
 	cmp dword [k_reenter], 0
-	jne	.re_enter
+	jne	.1
 	
 	mov esp, StackTop ;将栈顶指向另一块空闲区域防止进程栈被破坏
+	
+	push .restart_v2
+	jmp .2
+.1:
+	push .restart_reenter_v2
+	ret
+	
+.2:	
+	sti ;默认中断是不打开的 为了在程序执行过程中能够接受其他中断
+	
+; 切换进程----start----
 
-	sti
-	
-; 程序代码----start----
-		
+	push 0	
 	call clock_handler
+	add esp, 4
+	 
+	 
+; 切换进程----end----
 	
-; 程序代码----end----
+	cli ;关闭中断 此后不再接受其他中断请求
+	ret ;相当于 pop IP
 	
-	cli
-	
+.restart_v2:	
 	mov esp, [p_proc_ready]
 	lldt [esp + P_LDT_SEL]	
 	lea eax, [esp + P_STACKTOP]
 	mov dword [tss + TSS3_S_SP0], eax
-.re_enter:
+	
+.restart_reenter_v2:
 	dec dword [k_reenter]
 	
 	pop gs
@@ -93,6 +130,11 @@ hwint00:
 	popad
 	add esp, 4
 	iretd
+%endmacro 
+
+ALIGN 16
+hwint00:
+	hwint_master 0
 	
 ALIGN 16
 hwint01:

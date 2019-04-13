@@ -6,13 +6,36 @@ PUBLIC int Addition(int a, int b){
 	return a + b;
 }
 
-PUBLIC void disp_int(int n){
+PUBLIC void disp_int_hex(int n){
 	char output[16];
-	itoa(output, n);
+	hex(output, n);
 	disp_str(output);
 } 
 
-PUBLIC char * itoa(char * str, int num){
+PUBLIC void disp_int(int n){
+	char output[16];
+	dec(output, n);
+	disp_str(output);
+}
+ 
+PUBLIC char * dec(char * str, int num){
+	
+	int  n = num, i = 0, w = 1;
+    char tmp[20];
+    
+	
+	while(n > 0){
+		int t = n % 10; 
+		str[i++] = t + '0';
+		n = n / 10;
+	}
+	
+	str[i] = '\0';
+	
+	return str;
+}
+ 
+PUBLIC char * hex(char * str, int num){
 	char * p = str;
 	char ch;
 	int	i;

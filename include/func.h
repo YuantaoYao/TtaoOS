@@ -7,10 +7,13 @@ PUBLIC void memset(void* p_dst, char ch, int size);
 PUBLIC void  disp_str(char * pszInfo);
 
 PUBLIC int Addition(int a, int b);
-PUBLIC char * itoa(char * str, int num);
-PUBLIC void exception_handler(int vec_no,int err_code,int eip,int cs,int eflags);
+PUBLIC char * hex(char * str, int num);
+PUBLIC char * dec(char * str, int num);
 PUBLIC void disp_int(int n);
+PUBLIC void disp_int_hex(int n);
 PUBLIC void disp_color_str(char * info, int color);
+
+PUBLIC void exception_handler(int vec_no,int err_code,int eip,int cs,int eflags);
 
 PUBLIC void init_protect();
 PUBLIC void Init8259A();
