@@ -7,10 +7,14 @@ PUBLIC void memset(void* p_dst, char ch, int size);
 PUBLIC void  disp_str(char * pszInfo);
 
 PUBLIC int Addition(int a, int b);
-PUBLIC char * itoa(char * str, int num);
-PUBLIC void exception_handler(int vec_no,int err_code,int eip,int cs,int eflags);
+
 PUBLIC void disp_int(int n);
+PUBLIC void disp_int_hex(int n);
 PUBLIC void disp_color_str(char * info, int color);
+PUBLIC char* itoa(int num, char* str,int radix);
+PUBLIC void * exchange(char * from, char * to);
+
+PUBLIC void exception_handler(int vec_no,int err_code,int eip,int cs,int eflags);
 
 PUBLIC void init_protect();
 PUBLIC void Init8259A();
@@ -22,9 +26,21 @@ PUBLIC void kernel_main();
 PUBLIC void sleep(int time);
 
 PUBLIC void restart();
+//PUBLIC void restart_reenter();
 
 PUBLIC void init_idt_desc(unsigned char vector, u8 desc_type, int_handler handler, unsigned char privilege);
 
+PUBLIC void put_irq_handler(int irq, irq_handler handler);
+
 PUBLIC u32 seg2phys(u16 seg);	
 
+PUBLIC void clock_handler(int irq);
+
+PUBLIC void TestA();
+
+PUBLIC void TestB();
+
+PUBLIC void TestC();
+
+PUBLIC void * strcpy(char* p_dst, char* p_src);
 #endif

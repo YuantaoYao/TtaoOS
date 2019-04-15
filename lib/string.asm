@@ -4,6 +4,7 @@ global  disp_str
 global  disp_color_str
 global	memcpy
 global  memset
+global  strcpy
 ; ========================================================================
 ;                  void disp_str(char * info);
 ; ========================================================================
@@ -142,6 +143,36 @@ memcpy:
 	mov eax, [ebp + 8]
 	
 	pop ecx
+	pop edi
+	pop esi
+	mov esp, ebp
+	pop ebp
+	ret
+	
+; ------------------------------------------------------------------------
+; void * strcpy(char* p_dst, char* p_src);
+; ------------------------------------------------------------------------
+strcpy:
+	push ebp
+	mov ebp, esp
+	
+	push esi
+	push edi
+	
+	mov edi, [ebp + 8]
+	mov esi, [ebp + 12]
+.1:	
+	mov al, [esi]
+	inc esi
+	
+	mov byte [edi], al
+	inc edi
+	
+	cmp al, 0
+	jnz .1
+	
+	mov eax, [ebp + 8]
+	
 	pop edi
 	pop esi
 	mov esp, ebp

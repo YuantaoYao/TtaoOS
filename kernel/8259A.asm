@@ -1,8 +1,16 @@
 extern spurious_irq
 extern tss
-extern stackLoop
 extern StackTop
 extern p_proc_ready
+extern sleep
+extern k_reenter
+extern clock_handler
+extern disp_int
+extern disp_str
+extern save
+extern restart
+extern restart_reenter
+extern irq_table
 
 global hwint00
 global hwint01
@@ -42,46 +50,38 @@ EOI					equ	0x20
 	call spurious_irq
 	add esp, 4
 	hlt
-%endmacro
+%endmacro 
 
-ALIGN 16
-hwint00:
-	sub esp, 4
-	pushad
-	push ds
-	push es
-	push fs
-	push gs
-	mov dx, ss
-	mov ds, dx
-	mov es, dx
+%macro hwint_master 1
+	call save ;保持寄存器状态
 	
-	mov esp, StackTop ;将栈顶指向另一块空闲区域防止进程栈被破坏
-
-	sti
-
-	call stackLoop
-
-	inc byte [gs:0]
+	in al, INT_M_CTLMASK
+	or al, (1 << %1)					;关闭时钟中断
+	out INT_M_CTLMASK, al
 	
 	mov al, EOI
 	out INT_M_CTL, al
+	sti ;默认中断是不打开的 为了在程序执行过程中能够接受其他中断
 	
-	cli
-	
-	mov esp, [p_proc_ready]
-	
-	
-	lea eax, [esp + P_STACKTOP]
-	mov dword [tss + TSS3_S_SP0], eax
-	
-	pop gs
-	pop fs
-	pop es
-	pop ds
-	popad
+; 切换进程----start----
+
+	push %1
+	call [irq_table + %1 * 4]
 	add esp, 4
-	iretd
+	 
+; 切换进程----end----
+	cli ;关闭中断 此后不再接受其他中断请求
+	
+	in al, INT_M_CTLMASK
+	and al, ~(1 << %1)		;打开时钟中断
+	out INT_M_CTLMASK, al
+	
+	ret ;相当于 pop IP
+%endmacro 
+
+ALIGN 16
+hwint00:
+	hwint_master 0
 	
 ALIGN 16
 hwint01:

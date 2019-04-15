@@ -90,9 +90,11 @@ PUBLIC void init_protect(){
 	tss.ss0 = SELECTOR_KERNEL_DS;
 	init_descriptor(&gdt[INDEX_TSS],  vir2phys(seg2phys(SELECTOR_KERNEL_DS), &tss),  sizeof(tss) - 1,  DA_386TSS);
 	tss.iobass = sizeof(tss);
-	
-	init_descriptor(&gdt[INDEX_LDT_FIRST], vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[0].ldts), LDT_SIZE * sizeof(DESCRIPTOR) - 1, DA_LDT);
-	
+
+	for(int i=0;i<NR_TASKS;i++){
+		init_descriptor(&gdt[INDEX_LDT_FIRST + i], vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[i].ldts), LDT_SIZE * sizeof(DESCRIPTOR) - 1, DA_LDT);		
+	}
+ 
 	disp_str("------------------end protect--------------------\n");
 }
 /*======================================================================*

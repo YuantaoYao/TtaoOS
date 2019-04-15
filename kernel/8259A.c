@@ -1,8 +1,11 @@
-#include "const.h"
 #include "type.h"
+#include "const.h"
+#include "protect.h"
 #include "func.h"
-PUBLIC void stackLoop();
-int i = 0;
+#include "proc.h"
+
+void spurious_irq(int irq);
+
 PUBLIC void Init8259A(){
 	out_port(INT_M_CTL, 0x11);
 	out_port(INT_S_CTL, 0x11);
@@ -14,6 +17,9 @@ PUBLIC void Init8259A(){
 	out_port(INT_S_CTLMASK, 0x1);
 	out_port(INT_M_CTLMASK, 0xFC);
 	out_port(INT_S_CTLMASK, 0xFC);
+	for(int i=0;i<NR_IRQ;i++){
+		irq_table[i] = spurious_irq;
+	}
 }
 
 // 输出中断序号
@@ -23,9 +29,6 @@ PUBLIC void spurious_irq(int irq){
 	disp_str("\n");
 }
 
-PUBLIC void stackLoop(){
-	disp_str("^");
-	int i=0;
-	int b=1;
-	int c = i + b;
+PUBLIC void put_irq_handler(int irq, irq_handler handler){
+	irq_table[irq] = handler;
 }
