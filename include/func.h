@@ -14,12 +14,17 @@ PUBLIC void disp_color_str(char * info, int color);
 PUBLIC char* itoa(int num, char* str,int radix);
 PUBLIC void * exchange(char * from, char * to);
 
+PUBLIC void disable_irq(int irq);
+PUBLIC void enable_irq(int irq);
+
 PUBLIC void exception_handler(int vec_no,int err_code,int eip,int cs,int eflags);
 
 PUBLIC void init_protect();
 PUBLIC void Init8259A();
 
 PUBLIC void out_port(u16 port, u8 value);
+
+PUBLIC u8 in_port(u16 port);
 
 PUBLIC void kernel_main();
 

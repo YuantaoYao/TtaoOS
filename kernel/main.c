@@ -49,12 +49,13 @@ PUBLIC void kernel_main(){
 void initIRQ(){
 	int CLOCK_IRQ = 0;
 	put_irq_handler(CLOCK_IRQ, clock_handler);
+	enable_irq(CLOCK_IRQ);
 }
 
 void TestA(){
 
 	while(1){
-		disp_str("A");
+		//disp_str("A");
 		sleep(1000);
 		//disp_int(1234567);
 	}
@@ -63,7 +64,7 @@ void TestA(){
 void TestB(){
 
 	while(1){
-		disp_str("E");
+		//disp_str("E");
 		sleep(10);
 	}
 }
@@ -71,7 +72,7 @@ void TestB(){
 void TestC(){
 	 
 	while(1){
-		disp_str("C");
+		//disp_str("C");
 		sleep(10);
 	}
 }
