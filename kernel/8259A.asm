@@ -31,13 +31,6 @@ global hwint0F
 
 %include "kernel/include/proc.inc"
 
-INT_M_CTL			equ	0x20 
-INT_M_CTLMASK		equ	0x21 
-INT_S_CTL			equ	0xA0 
-INT_S_CTLMASK		equ	0xA1 
-
-EOI					equ	0x20
-
 %macro irq_master 1
 	push %1
 	call spurious_irq

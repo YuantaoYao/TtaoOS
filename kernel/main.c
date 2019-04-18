@@ -3,7 +3,7 @@
 #include "func.h"
 #include "protect.h"
 #include "proc.h"
-
+#include "global.h"
 
 void initIRQ();
 
@@ -11,6 +11,8 @@ PUBLIC void kernel_main(){
 	initIRQ();
 	
 	k_reenter = 0;
+	ticks = 0;
+	
 	PROCESS * p_proc		 = proc_table;
 	TASK * p_task 			 = task_table;
 	char * p_task_stack 	 = task_stack + STACK_SIZE_TOTAL;
@@ -55,16 +57,16 @@ void initIRQ(){
 void TestA(){
 
 	while(1){
-		//disp_str("A");
-		sleep(1000);
-		//disp_int(1234567);
+		milli_dalay(1000);
+		int t = get_ticks();
+	 	disp_int(t);
+		disp_str("\n");  
 	}
 }
 
 void TestB(){
 
 	while(1){
-		//disp_str("E");
 		sleep(10);
 	}
 }
@@ -72,7 +74,6 @@ void TestB(){
 void TestC(){
 	 
 	while(1){
-		//disp_str("C");
 		sleep(10);
 	}
 }

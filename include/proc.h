@@ -71,6 +71,8 @@ extern TASK task_table[];
 
 extern irq_handler irq_table[];
 
+extern system_call sys_call_table[];
+
 EXTERN PROCESS* p_proc_ready;
 
 EXTERN TSS	tss;

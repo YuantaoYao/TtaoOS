@@ -3,13 +3,11 @@
 #include "protect.h"
 #include "func.h"
 #include "proc.h"
+#include "global.h"
 
 void spurious_irq(int irq);
 
 PUBLIC void Init8259A(){
-	for(int i=0;i<NR_IRQ;i++){
-		irq_table[i] = spurious_irq;
-	}
 	out_port(INT_M_CTL, 0x11);
 	out_port(INT_S_CTL, 0x11);
 	out_port(INT_M_CTLMASK, INT_VECTOR_IRQ0);
@@ -20,6 +18,9 @@ PUBLIC void Init8259A(){
 	out_port(INT_S_CTLMASK, 0x1);
 	out_port(INT_M_CTLMASK, 0xFF);
 	out_port(INT_S_CTLMASK, 0xFF);
+	for(int i=0;i<NR_IRQ;i++){
+		irq_table[i] = spurious_irq;
+	}
 }
 
 // 输出中断序号

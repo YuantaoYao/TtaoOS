@@ -2,11 +2,11 @@
 #include "const.h"
 #include "protect.h"
 #include "func.h"
+#include "global.h"
 
 PRIVATE void init();
 
 PUBLIC void cstart(){
-	disp_str("------------------start cstart--------------------\n");
 	memcpy(&gdt,
 	(void*)(*((u32*)(&gdt_ptr[2]))),
 	*((u16*)(&gdt_ptr[0])) + 1
@@ -22,5 +22,4 @@ PUBLIC void cstart(){
 	*p_idt_limit = IDT_SIZE * sizeof(GATE) - 1;
 	*p_idt_base  = (u32)&idt;
 	init_protect();
-	disp_str("------------------end cstart--------------------\n");
 }
