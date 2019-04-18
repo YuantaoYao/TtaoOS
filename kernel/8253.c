@@ -6,7 +6,7 @@
 #include "global.h"
 
 PUBLIC void Init8253(){
-	out_port(TIMER_MODE, 0x52);
+	out_port(TIMER_MODE, 0x36);
 	out_port(TIMER0, (u8) (TIMER_FREQ/HZ));
 	out_port(TIMER0, (u8) (TIMER_FREQ/HZ >> 8)); 
 }
