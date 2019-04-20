@@ -3,14 +3,26 @@
 #include "func.h"
 #include "protect.h"
 #include "proc.h"
-
+#include "global.h"
 
 void initIRQ();
 
 PUBLIC void kernel_main(){
+	disp_pos=0;
+	for(int i=0;i<80*25;i++){
+		disp_str(" ");
+	}
+	disp_pos=0;
+
 	initIRQ();
 	
+	proc_table[0].ticks = proc_table[0].priority = 15;
+	proc_table[1].ticks = proc_table[1].priority = 10;
+	proc_table[2].ticks = proc_table[2].priority = 5;
+	
 	k_reenter = 0;
+	ticks = 0;
+	
 	PROCESS * p_proc		 = proc_table;
 	TASK * p_task 			 = task_table;
 	char * p_task_stack 	 = task_stack + STACK_SIZE_TOTAL;
@@ -48,30 +60,33 @@ PUBLIC void kernel_main(){
 
 void initIRQ(){
 	int CLOCK_IRQ = 0;
+	int KEYBOARD_IRQ = 1;
 	put_irq_handler(CLOCK_IRQ, clock_handler);
+	enable_irq(CLOCK_IRQ);
+	put_irq_handler(KEYBOARD_IRQ, keyboard_handler);
+	enable_irq(KEYBOARD_IRQ);
 }
 
 void TestA(){
 
 	while(1){
-		disp_str("A");
-		sleep(1000);
-		//disp_int(1234567);
+		milli_dalay(100);
+		disp_str("A.");  
 	}
 }
 
 void TestB(){
 
 	while(1){
-		disp_str("E");
-		sleep(10);
+		milli_dalay(100);
+		disp_str("B.");  
 	}
 }
 
 void TestC(){
 	 
 	while(1){
-		disp_str("C");
-		sleep(10);
+		milli_dalay(100);
+		disp_str("C.");  
 	}
 }

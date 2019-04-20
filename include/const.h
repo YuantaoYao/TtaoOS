@@ -119,6 +119,18 @@
 /* 系统调用 */
 #define	INT_VECTOR_SYS_CALL		0x90
 
+/* 8253编程端口 */
+#define TIMER0	0x40
+#define TIMER1	0x41
+#define	TIMER2	0x42
+#define TIMER_MODE	0x43
+
+#define TIMER_FREQ	1193182L
+#define HZ	100
+
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
+#define NR_SYS_CALL     1
+
+#define INT_TTAO_TEXT	0xA0
 #endif

@@ -53,6 +53,10 @@ typedef struct s_process{
 	STACKFRAME regs; //保存进程寄存器
 	u16 ldt_sel;     //进程ldt地址
 	DESCRIPTOR ldts[LDT_SIZE];  //局部变量表
+	
+	int ticks;		//进程优先级
+	int priority;   //优先级初始化常量
+	
 	u32 pid;		 //进程号
 	char name[16];	 //进程名称
 }PROCESS;
@@ -70,6 +74,8 @@ extern PROCESS proc_table[];
 extern TASK task_table[];
 
 extern irq_handler irq_table[];
+
+extern system_call sys_call_table[];
 
 EXTERN PROCESS* p_proc_ready;
 

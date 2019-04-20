@@ -3,12 +3,15 @@ extern p_proc_ready
 extern tss
 extern StackTop
 extern k_reenter
+extern sys_call_table
 
+global sys_call
 global save
 global restart
 global restart_reenter
+global int_call_ttao
 ;===============================================================
-;                       saves
+;                       saves 发生中断后保存现场
 ;===============================================================
 	
 save:
@@ -21,9 +24,9 @@ save:
 	mov ds, dx
 	mov es, dx
 	
-	mov eax, esp
+	mov esi, esp
 	
-	inc byte [gs:10]
+	;inc byte [gs:10]
 	
 	inc dword [k_reenter]
 	cmp dword [k_reenter], 0
@@ -31,25 +34,26 @@ save:
 	mov esp, StackTop
 	
 	push restart
-	jmp [eax + RETADR - P_STACKBASE]
+	jmp [esi + RETADR - P_STACKBASE]
 	
 .1:
 	push restart_reenter	
-	jmp [eax + RETADR - P_STACKBASE]
+	jmp [esi + RETADR - P_STACKBASE]
 
 ;===============================================================
 ;                       sys_call
 ;===============================================================
-; sys_call:
-	; call save
-	; sti
+sys_call:
+	call save
+	sti
 	
-	; call [sys_call_table + eax * 4]
-	; mov [esi + EAXREG -P_STACKBASE], eax
+	call [sys_call_table + eax * 4]
+	mov [esi + EAXREG -P_STACKBASE], eax
 	
-	; cli
+	cli
 	
-	; ret
+	ret
+	
 ;===============================================================
 ;                       restart
 ;===============================================================

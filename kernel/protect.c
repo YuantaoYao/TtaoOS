@@ -3,6 +3,7 @@
 #include "protect.h"
 #include "func.h"
 #include "proc.h"
+#include "global.h"
 
 void hwint00();
 void hwint01();
@@ -46,9 +47,8 @@ PUBLIC void init_descriptor(DESCRIPTOR* p_desc, u32 base, u32 limit, u16 attribu
                             init_prot
  *======================================================================*/
 PUBLIC void init_protect(){
-	disp_str("------------------start protect--------------------\n");
 	Init8259A();
-	
+	Init8253();
 	/* 添加异常 */
 	init_idt_desc(INT_VECTOR_DIVIDE, DA_386IGate, divide_error, PRIVILEGE_KRNL);
 	init_idt_desc(INT_VECTOR_DEBUG, DA_386IGate, single_step_exception, PRIVILEGE_KRNL);		
@@ -85,6 +85,8 @@ PUBLIC void init_protect(){
 	init_idt_desc( INT_VECTOR_IRQ8 + 6, DA_386IGate, hwint0E, PRIVILEGE_KRNL);
 	init_idt_desc( INT_VECTOR_IRQ8 + 7, DA_386IGate, hwint0F, PRIVILEGE_KRNL);
 	
+	init_idt_desc(INT_VECTOR_SYS_CALL, DA_386IGate, sys_call, PRIVILEGE_USER);	
+	
 	
 	memset(&tss, 0, sizeof(tss));
 	tss.ss0 = SELECTOR_KERNEL_DS;
@@ -95,7 +97,6 @@ PUBLIC void init_protect(){
 		init_descriptor(&gdt[INDEX_LDT_FIRST + i], vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[i].ldts), LDT_SIZE * sizeof(DESCRIPTOR) - 1, DA_LDT);		
 	}
  
-	disp_str("------------------end protect--------------------\n");
 }
 /*======================================================================*
                              init_idt_desc
