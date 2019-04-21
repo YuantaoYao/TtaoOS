@@ -71,7 +71,7 @@ void TestA(){
 
 	while(1){
 		milli_dalay(100);
-		disp_str("A.");  
+		// disp_str("A.");  
 	}
 }
 
@@ -79,7 +79,7 @@ void TestB(){
 
 	while(1){
 		milli_dalay(100);
-		disp_str("B.");  
+		// disp_str("B.");  
 	}
 }
 
@@ -87,6 +87,6 @@ void TestC(){
 	 
 	while(1){
 		milli_dalay(100);
-		disp_str("C.");  
+		// disp_str("C.");  
 	}
 }
