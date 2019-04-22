@@ -5,17 +5,15 @@
 #include "proc.h"
 #include "global.h"
 
-void initIRQ();
+void Clean();
+void Init_Clock();
 
 PUBLIC void kernel_main(){
-	disp_pos=0;
-	for(int i=0;i<80*25;i++){
-		disp_str(" ");
-	}
-	disp_pos=0;
-
-	initIRQ();
 	
+	Clean();
+	Init_Clock();
+	Init_Keyboard();
+	task_tty();
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	proc_table[1].ticks = proc_table[1].priority = 10;
 	proc_table[2].ticks = proc_table[2].priority = 5;
@@ -55,16 +53,14 @@ PUBLIC void kernel_main(){
 	}
 	p_proc_ready = proc_table;
 	restart(); 
-	
 }
 
-void initIRQ(){
-	int CLOCK_IRQ = 0;
-	int KEYBOARD_IRQ = 1;
-	put_irq_handler(CLOCK_IRQ, clock_handler);
-	enable_irq(CLOCK_IRQ);
-	put_irq_handler(KEYBOARD_IRQ, keyboard_handler);
-	enable_irq(KEYBOARD_IRQ);
+void Clean(){
+	disp_pos=0;
+	for(int i=0;i<80*25;i++){
+		disp_str(" ");
+	}
+	disp_pos=0;
 }
 
 void TestA(){

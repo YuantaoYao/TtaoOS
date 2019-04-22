@@ -7,11 +7,9 @@
 #include "keyboard.h"
 
 PRIVATE KB_INPUT kb_in;
-PRIVATE void init_keyboard();
 
 PUBLIC void keyboard_handler(int irq){
-	init_keyboard();
-	
+	//Break code = make code + 0x80
 	u8 scan_code = in_port(RAED_KB_CODE);
 	if(kb_in.count < KB_IN_BYTES){
 		*(kb_in.p_head) = scan_code;
@@ -23,7 +21,39 @@ PUBLIC void keyboard_handler(int irq){
 	}
 }
 
-PRIVATE void init_keyboard(){
+PUBLIC void Init_Keyboard(){
 	kb_in.count = 0;
 	kb_in.p_head = kb_in.p_tail = kb_in.buf;
+	
+	put_irq_handler(NUM_KEYBOAED_IRQ, keyboard_handler);
+	enable_irq(NUM_KEYBOAED_IRQ);
+}
+
+PUBLIC void keyboard_read(){
+	u8 scan_code;
+	char output[2];
+	int make;
+	
+	memset(output, 0, 2); 
+	if(kb_in.count > 0){
+		disable_int();
+		scan_code = *(kb_in.p_tail);
+		kb_in.p_tail++;
+		if(kb_in.p_tail == kb_in.buf + KB_IN_BYTES){
+			kb_in.p_tail = kb_in.buf;
+		}
+		kb_in.count--;
+		
+		enable_int();
+		
+		if(scan_code == 0xE1){
+			return;
+		}else if(scan_code == 0xE0){
+			return ;
+		}else{
+			
+			disp_int_hex(scan_code);
+		}
+		
+	}
 }

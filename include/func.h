@@ -49,6 +49,18 @@ PUBLIC u32 seg2phys(u16 seg);
 //中断处理程序
 PUBLIC void clock_handler(int irq);
 PUBLIC void keyboard_handler(int irq);
+PUBLIC void disable_int();
+PUBLIC void enable_int();
+
+//键盘处理程序
+PUBLIC void keyboard_read();
+
+//tty
+PUBLIC void task_tty();
+
+//初始化中断
+PUBLIC void Init_Keyboard();
+PUBLIC void Init_Clock();
 
 PUBLIC void TestA();
 
