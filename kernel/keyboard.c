@@ -5,6 +5,7 @@
 #include "proc.h"
 #include "global.h"
 #include "keyboard.h"
+#include "keymap.h"
 
 PRIVATE KB_INPUT kb_in;
 
@@ -46,13 +47,17 @@ PUBLIC void keyboard_read(){
 		
 		enable_int();
 		
+			disp_int_hex(scan_code);
 		if(scan_code == 0xE1){
 			return;
 		}else if(scan_code == 0xE0){
+			disp_str("@");
 			return ;
 		}else{
-			
-			disp_int_hex(scan_code);
+			make = (scan_code & FLAG_BREAK ? FALSE : TRUE);//区分Mark code 和 Break code
+			if(make){//Break Code
+				output[0] = keymap[(scan_code & 0x7F) * MAP_COLS];
+			}
 		}
 		
 	}
