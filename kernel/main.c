@@ -1,9 +1,10 @@
 #include "const.h"
 #include "type.h"
-#include "func.h"
 #include "protect.h"
-#include "proc.h"
 #include "global.h"
+#include "tty.h"
+#include "proc.h"
+#include "func.h"
 
 void Clean();
 void Init_Clock();
@@ -13,7 +14,7 @@ PUBLIC void kernel_main(){
 	Clean();
 	Init_Clock();
 	Init_Keyboard();
-	task_tty();
+	
 	proc_table[0].ticks = proc_table[0].priority = 15;
 	proc_table[1].ticks = proc_table[1].priority = 10;
 	proc_table[2].ticks = proc_table[2].priority = 5;
@@ -67,7 +68,8 @@ void TestA(){
 
 	while(1){
 		milli_dalay(100);
-		// disp_str("A.");  
+		// disp_str("A.");
+		task_tty();		
 	}
 }
 
@@ -75,7 +77,8 @@ void TestB(){
 
 	while(1){
 		milli_dalay(100);
-		// disp_str("B.");  
+		// disp_str("B."); 
+		
 	}
 }
 

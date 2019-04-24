@@ -1,8 +1,8 @@
 #include "type.h"
 #include "const.h"
 #include "protect.h"
-#include "func.h"
 #include "global.h"
+#include "func.h"
 
 PRIVATE void init();
 

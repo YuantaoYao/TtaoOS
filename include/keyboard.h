@@ -110,4 +110,7 @@ typedef struct s_kb{
 	char buf[KB_IN_BYTES];
 }KB_INPUT;
 
+//键盘处理程序
+PUBLIC void keyboard_read(TTY* p_tty);
+
 #endif

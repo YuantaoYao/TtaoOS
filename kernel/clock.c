@@ -1,9 +1,10 @@
 #include "type.h"
 #include "const.h"
 #include "protect.h"
-#include "func.h"
-#include "proc.h"
 #include "global.h"
+#include "tty.h"
+#include "proc.h"
+#include "func.h"
 
 PUBLIC void clock_handler(int irq){
 	ticks++;

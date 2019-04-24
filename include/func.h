@@ -52,8 +52,7 @@ PUBLIC void keyboard_handler(int irq);
 PUBLIC void disable_int();
 PUBLIC void enable_int();
 
-//键盘处理程序
-PUBLIC void keyboard_read();
+
 
 //tty
 PUBLIC void task_tty();

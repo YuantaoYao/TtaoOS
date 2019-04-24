@@ -58,10 +58,10 @@ bootstrap:
 	
 $(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o \
 						$(d_kernel)global.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o	$(d_kernel)8259Aint.o $(d_kernel)main.o $(d_kernel)process.o \
-						${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o
+						${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o $(d_kernel)console.o
 	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o \
 							 $(d_kernel)global.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o $(d_kernel)8259Aint.o $(d_kernel)main.o $(d_kernel)process.o \
-							 ${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o
+							 ${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o $(d_kernel)console.o
 	
 $(d_kernel)kernel.o : $(d_kernel)kernel.asm $(d_kernel)start.c
 	$(ASM) $(p_include) -o $@ $<
@@ -107,6 +107,10 @@ $(d_kernel)keyboard.o : $(d_kernel)keyboard.c
 
 $(d_kernel)tty.o : $(d_kernel)tty.c
 	$(CC) $(p_gccflags) -o $@ $<
+
+$(d_kernel)console.o : $(d_kernel)console.c
+	$(CC) $(p_gccflags) -o $@ $<
+
 
 $(d_lib)klib.o :$(d_lib)klib.c
 	$(CC) $(p_gccflags) -o $@ $<

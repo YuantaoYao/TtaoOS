@@ -77,6 +77,10 @@ extern irq_handler irq_table[];
 
 extern system_call sys_call_table[];
 
+extern TTY tty_table[];
+
+extern CONSOLE console_table[];
+
 EXTERN PROCESS* p_proc_ready;
 
 EXTERN TSS	tss;

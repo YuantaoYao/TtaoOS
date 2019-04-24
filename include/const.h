@@ -128,9 +128,22 @@
 /* 中断码 */
 #define NUM_CLOCK_IRQ	0
 #define NUM_KEYBOAED_IRQ 1
-
+/* 825芯片 */
 #define TIMER_FREQ	1193182L
 #define HZ	100
+
+/* VGA */
+#define CRTC_ADDR_REG	0x3D4
+#define CRTC_DATA_REG	0x3D5
+#define START_ADDR_H	0xC
+#define START_ADDR_L	0xD
+#define CURSOR_H		0xE
+#define CURSOR_L		0xF
+#define V_MEM_BASE		0xB8000
+#define V_MEM_SIZE		0x8000
+/* TTY */
+#define NR_CONSOLE	3
+
 
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
