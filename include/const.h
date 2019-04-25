@@ -141,9 +141,9 @@
 #define CURSOR_L		0xF
 #define V_MEM_BASE		0xB8000
 #define V_MEM_SIZE		0x8000
+
 /* TTY */
 #define NR_CONSOLE	3
-
 
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
