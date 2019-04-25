@@ -24,6 +24,16 @@ PRIVATE int column;
 PRIVATE KB_INPUT kb_in;
 
 PRIVATE u8 get_byte_from_kbuf();
+//初始化键盘参数
+PUBLIC void Init_Keyboard(){
+	code_with_E0 = 0;
+	shift_l = shift_r = 0;
+	kb_in.count = 0;
+	kb_in.p_head = kb_in.p_tail = kb_in.buf;
+
+	put_irq_handler(NUM_KEYBOAED_IRQ, keyboard_handler);
+	enable_irq(NUM_KEYBOAED_IRQ);
+}
 
 PUBLIC void keyboard_handler(int irq){
 	//Break code = make code + 0x80
@@ -38,15 +48,6 @@ PUBLIC void keyboard_handler(int irq){
 	}
 }
 
-PUBLIC void Init_Keyboard(){
-	code_with_E0 = 0;
-	shift_l = shift_r = 0;
-	kb_in.count = 0;
-	kb_in.p_head = kb_in.p_tail = kb_in.buf;
-
-	put_irq_handler(NUM_KEYBOAED_IRQ, keyboard_handler);
-	enable_irq(NUM_KEYBOAED_IRQ);
-}
 //键盘处理
 PUBLIC void keyboard_read(TTY* p_tty){
 	u8 scan_code;
@@ -141,7 +142,6 @@ PUBLIC void keyboard_read(TTY* p_tty){
 				key |= ctrl_r  ? FLAG_CTRL_R : 0;
 				key |= alt_l   ? FLAG_ALT_L : 0;
 				key |= alt_r   ? FLAG_ALT_L : 0;
-				
 				in_process(key, p_tty);
 			}  
 		}

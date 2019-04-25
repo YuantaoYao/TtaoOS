@@ -38,7 +38,6 @@ PRIVATE void init_tty(TTY* p_tty){
 }
 
 PUBLIC void in_process(u32 key, TTY* p_tty){
-	char output[] = {'\0','\0'};
 	if(!(key & FLAG_EXT)){		
 		if(p_tty->inbuf_count < TTY_IN_BYTES){
 			*(p_tty->p_inbuf_head) = key;
@@ -80,7 +79,7 @@ PUBLIC void in_process(u32 key, TTY* p_tty){
 }
 
 PRIVATE void tty_do_write(TTY* p_tty){
-	if(p_tty->inbuf_count){
+	if(is_current_console(p_tty->p_console) && p_tty->inbuf_count){
 		char ch = *(p_tty->p_inbuf_tail);
 		p_tty->p_inbuf_tail++;
 		if(p_tty->p_inbuf_tail == p_tty->in_buf + TTY_IN_BYTES){

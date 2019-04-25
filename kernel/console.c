@@ -14,12 +14,14 @@ PUBLIC int is_current_console(CONSOLE* p_con){
 }
 
 PUBLIC void out_char(CONSOLE* p_con, char ch){
-	u8* p_vmem = (u8*)(V_MEM_BASE + disp_pos);
+	// u8* p_vmem = (u8*)(V_MEM_BASE + disp_pos);
 	
-	*p_vmem++ = ch;
-	*p_vmem++ = DEFAULT_CHAR_COLOR;
-	disp_pos += 2;
-	
+	// *p_vmem++ = ch;
+	// *p_vmem++ = DEFAULT_CHAR_COLOR;
+	// disp_pos += 2;
+	char output[] = {'\0','\0'};
+	output[0] = ch;
+	disp_color_str(output, DEFAULT_CHAR_COLOR);
 	set_cursor(disp_pos/2);
 }
 

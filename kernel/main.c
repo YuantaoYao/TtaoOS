@@ -67,9 +67,9 @@ void Clean(){
 void TestA(){
 
 	while(1){
-		milli_dalay(100);
+		//milli_dalay(100);
 		// disp_str("A.");
-		task_tty();		
+	//	task_tty();		
 	}
 }
 

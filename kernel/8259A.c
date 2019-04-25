@@ -31,6 +31,7 @@ PUBLIC void spurious_irq(int irq){
 	disp_str("\n");
 }
 
+//绑定中断向量表
 PUBLIC void put_irq_handler(int irq, irq_handler handler){
 	disable_irq(irq);
 	irq_table[irq] = handler;
