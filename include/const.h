@@ -128,6 +128,7 @@
 /* 中断码 */
 #define NUM_CLOCK_IRQ	0
 #define NUM_KEYBOAED_IRQ 1
+
 /* 825芯片 */
 #define TIMER_FREQ	1193182L
 #define HZ	100
