@@ -151,8 +151,7 @@ PUBLIC void keyboard_read(TTY* p_tty){
 //获取一个字符
 PRIVATE u8 get_byte_from_kbuf(){
 	u8 scan_code;
-	
-	while(kb_in.count < 0){}
+	while(kb_in.count < 1){}
 	disable_int();
 	scan_code = *(kb_in.p_tail);
 	kb_in.p_tail++;

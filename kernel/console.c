@@ -16,7 +16,7 @@ PUBLIC void InitScreen(TTY* p_tty){
 	p_tty->p_console = console_table + nr_tty;
 	int v_mem_size = V_MEM_SIZE >> 1;
 	
-	int con_v_mem_size	= v_mem_size / NR_CONSOLE;
+	int con_v_mem_size	= SCREEN_WIDTH * (v_mem_size / NR_CONSOLE / SCREEN_WIDTH);  //除SCREEN_WIDTH又乘SCREEN_WIDTH是为了每一个tty都是SCREEN_WIDTH 的整倍数
 	p_tty->p_console->original_addr 	 = nr_tty * con_v_mem_size;
 	p_tty->p_console->v_mem_limit 		 = con_v_mem_size;
 	//卷轴起始点开始的位置
@@ -52,7 +52,7 @@ PUBLIC void out_char(CONSOLE* p_con, char ch){
 		case '\n':
 		{
 			if(p_con->cursor < (p_con->original_addr + p_con->v_mem_limit - SCREEN_WIDTH)){
-				p_con->cursor = p_con->original_addr + SCREEN_WIDTH*(((p_con->cursor - p_con->original_addr)/SCREEN_WIDTH)+1);
+				p_con->cursor = p_con->original_addr + SCREEN_WIDTH*((p_con->cursor - p_con->original_addr)/SCREEN_WIDTH+1);
 			}
 			break;
 		}	
@@ -69,7 +69,7 @@ PUBLIC void out_char(CONSOLE* p_con, char ch){
 		}
 		default:
 		{
-			if(p_con->cursor < SCREEN_WIDTH *((p_con->original_addr + p_con->v_mem_limit)/SCREEN_WIDTH)){
+			if(p_con->cursor < (p_con->original_addr + p_con->v_mem_limit)){
 				*p_vmem++ = ch;
 				*p_vmem++ = DEFAULT_CHAR_COLOR ;
 				cursor_table[nr_console] += 1;
@@ -81,7 +81,7 @@ PUBLIC void out_char(CONSOLE* p_con, char ch){
 	if(p_con->cursor < p_con->current_start_addr){
 		scroll_screen(p_con, SCR_UP);		
 	}
-	if(p_con->cursor > p_con->current_start_addr + SCREEN_SIZE){		
+	if(p_con->cursor >= p_con->current_start_addr + SCREEN_SIZE){		
 		scroll_screen(p_con, SCR_DN);
 	}
 	flush(p_con, nr_console);
@@ -89,8 +89,14 @@ PUBLIC void out_char(CONSOLE* p_con, char ch){
 
 PRIVATE void flush(CONSOLE* p_con, int nr_console){
 	set_cursor(p_con->cursor); 
-	set_video_start_addr(p_con->current_start_addr);
 	cursor_table[nr_console] = p_con->cursor;
+	if(p_con->cursor < p_con->current_start_addr){
+		set_video_start_addr(SCREEN_WIDTH*(p_con->cursor/SCREEN_WIDTH));
+	}else if(p_con->cursor > (p_con->current_start_addr + SCREEN_SIZE)){
+		set_video_start_addr(SCREEN_WIDTH*(p_con->cursor/SCREEN_WIDTH+1) -SCREEN_SIZE);
+	}else{
+		set_video_start_addr(p_con->current_start_addr);
+	}
 }
 
 //切换控制台
@@ -108,7 +114,7 @@ PUBLIC void scroll_screen(CONSOLE* p_con, int directhion){
 			p_con->current_start_addr -= SCREEN_WIDTH;
 		}
 	}else if(directhion == SCR_DN){
-		if(p_con->current_start_addr + SCREEN_SIZE < SCREEN_WIDTH *((p_con->original_addr + p_con->v_mem_limit)/SCREEN_WIDTH) && 
+		if(p_con->current_start_addr + SCREEN_SIZE < (p_con->original_addr + p_con->v_mem_limit) && 
 										 (p_con->cursor > SCREEN_WIDTH + p_con->original_addr)){
 			p_con->current_start_addr += SCREEN_WIDTH;
 		}
@@ -116,7 +122,6 @@ PUBLIC void scroll_screen(CONSOLE* p_con, int directhion){
 		
 	}
 	set_video_start_addr(p_con->current_start_addr);
-	set_cursor(p_con->cursor);
 }
 
 //切换光标
