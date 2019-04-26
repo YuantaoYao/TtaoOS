@@ -15,8 +15,8 @@ typedef struct s_tty{
 /* CONSOLE */
 typedef struct s_console{
 	unsigned int current_start_addr; /* 当前显示到了什么位置 */
-	unsigned int original_addr;		 /* 当前控制台对应现存位置 */
-	unsigned int v_mem_limit;		 /*  当前控制台占的现存大小 */	
+	unsigned int original_addr;		 /* 当前控制台对应显存位置 */
+	unsigned int v_mem_limit;		 /* 当前控制台占的显存大小 */	
 	unsigned int cursor;			 /* 当前光标位置 */	
 }CONSOLE;
 
@@ -25,3 +25,7 @@ typedef struct s_console{
 PUBLIC int is_current_console(CONSOLE* p_con);
 PUBLIC void out_char(CONSOLE* p_con, char ch);
 PUBLIC void in_process(u32 key, TTY* p_tty);
+PUBLIC void InitScreen(TTY* p_tty);
+PUBLIC void select_console(int nr_console);
+PUBLIC void scroll_screen(CONSOLE* p_con, int directhion);
+PUBLIC void put_a_key(u32 key, TTY* p_tty);

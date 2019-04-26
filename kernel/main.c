@@ -57,7 +57,7 @@ PUBLIC void kernel_main(){
 }
 
 void Clean(){
-	disp_pos=0;
+	disp_pos=10;
 	for(int i=0;i<80*25;i++){
 		disp_str(" ");
 	}
@@ -69,7 +69,7 @@ void TestA(){
 	while(1){
 		//milli_dalay(100);
 		// disp_str("A.");
-	//	task_tty();		
+		task_tty();		
 	}
 }
 

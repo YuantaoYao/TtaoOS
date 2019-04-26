@@ -52,8 +52,6 @@ PUBLIC void keyboard_handler(int irq);
 PUBLIC void disable_int();
 PUBLIC void enable_int();
 
-
-
 //tty
 PUBLIC void task_tty();
 

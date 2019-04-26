@@ -27,7 +27,7 @@ PRIVATE u8 get_byte_from_kbuf();
 //初始化键盘参数
 PUBLIC void Init_Keyboard(){
 	code_with_E0 = 0;
-	shift_l = shift_r = 0;
+	shift_l = shift_r = ctrl_l = ctrl_r = alt_l = alt_r = 0;
 	kb_in.count = 0;
 	kb_in.p_head = kb_in.p_tail = kb_in.buf;
 
@@ -99,7 +99,7 @@ PUBLIC void keyboard_read(TTY* p_tty){
 		if((key != PRINTSCREEN) && (key != PAUSEBREAK)){
 			column = 0;
 			make = (scan_code & FLAG_BREAK ? 0 : 1);//区分是不是Mark code *(Break code)
-			keyrow = &keymap[(scan_code & 0x7F) * MAP_COLS];
+			keyrow = &keymap[(scan_code & 0x7F) * MAP_COLS];//从 map 中获取指定字符的 首地址 这里包括mark  和 break 
 		
 			if(shift_l || shift_r){
 				column = 1;
@@ -134,7 +134,6 @@ PUBLIC void keyboard_read(TTY* p_tty){
 				default:
 					break;
 			}
-					
 			if(make){
 				key |= shift_l ? FLAG_SHIFT_L : 0;
 				key |= shift_r ? FLAG_SHIFT_R : 0;
@@ -142,6 +141,7 @@ PUBLIC void keyboard_read(TTY* p_tty){
 				key |= ctrl_r  ? FLAG_CTRL_R : 0;
 				key |= alt_l   ? FLAG_ALT_L : 0;
 				key |= alt_r   ? FLAG_ALT_L : 0;
+			
 				in_process(key, p_tty);
 			}  
 		}

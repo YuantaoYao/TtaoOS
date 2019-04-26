@@ -21,4 +21,6 @@ PUBLIC system_call sys_call_table[NR_SYS_CALL] = {sys_get_ticks};
 
 PUBLIC TTY tty_table[NR_CONSOLE];
 
+PUBLIC int cursor_table[NR_CONSOLE];
+
 PUBLIC CONSOLE console_table[NR_CONSOLE];

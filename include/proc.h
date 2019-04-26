@@ -81,6 +81,8 @@ extern TTY tty_table[];
 
 extern CONSOLE console_table[];
 
+extern int cursor_table[];
+
 EXTERN PROCESS* p_proc_ready;
 
 EXTERN TSS	tss;
