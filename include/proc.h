@@ -59,6 +59,8 @@ typedef struct s_process{
 	
 	u32 pid;		 //进程号
 	char name[16];	 //进程名称
+	
+	int nr_tty;      //定位进程是哪个tty
 }PROCESS;
 
 typedef struct s_task{
@@ -71,7 +73,9 @@ extern char task_stack[];
  
 extern PROCESS proc_table[];
 
-extern TASK task_table[];
+extern TASK sys_task_table[];
+
+extern TASK user_task_table[];
 
 extern irq_handler irq_table[];
 

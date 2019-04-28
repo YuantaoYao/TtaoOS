@@ -11,13 +11,19 @@
 #define LDT_SIZE	2  /* 每个进程中局部描述符的个数 */
 
 #define NR_IRQ 		16 /* 定义中断数量 两片A8659A */
-#define	NR_TASKS	3  /* 定义允许的最大进程数 */
+
+#define	NR_SYS_TASKS_PROC	1  /* 定义允许的最大系统进程数 */
+#define	NR_USER_TASKS_PROC	3  /* 定义允许的最大用户进程数 */
+
+#define NR_ALL_TASKS_PROC	NR_SYS_TASKS_PROC + NR_USER_TASKS_PROC
+
+#define STACK_SIZE_TTY_TASK	0x8000
 
 #define STACK_SIZE_TESTA 0x8000
 #define STACK_SIZE_TESTB 0x8000	
 #define STACK_SIZE_TESTC 0x8000	
 
-#define STACK_SIZE_TOTAL	STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
+#define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
 
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */

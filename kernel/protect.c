@@ -95,7 +95,7 @@ PUBLIC void init_protect(){
 	init_descriptor(&gdt[INDEX_TSS],  vir2phys(seg2phys(SELECTOR_KERNEL_DS), &tss),  sizeof(tss) - 1,  DA_386TSS);
 	tss.iobass = sizeof(tss);
 
-	for(int i=0;i<NR_TASKS;i++){
+	for(int i=0;i<NR_ALL_TASKS_PROC;i++){
 		init_descriptor(&gdt[INDEX_LDT_FIRST + i], vir2phys(seg2phys(SELECTOR_KERNEL_DS), proc_table[i].ldts), LDT_SIZE * sizeof(DESCRIPTOR) - 1, DA_LDT);		
 	}
  
