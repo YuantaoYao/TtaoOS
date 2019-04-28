@@ -1,3 +1,5 @@
+#include "stdio.h"
+#include "mem.h"
 #include "const.h"
 #include "type.h"
 #include "protect.h"
@@ -85,7 +87,8 @@ void Clean(){
 void TestA(){
 
 	while(1){
-		//milli_dalay(100);
+
+		milli_dalay(1000);
 		// disp_str("A.");		
 	}
 }

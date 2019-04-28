@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"
@@ -34,4 +35,5 @@ PUBLIC void clock_handler(int irq){
 			}
 		}
 	}
+	p_proc_ready->nr_tty = nr_current_console;
 }

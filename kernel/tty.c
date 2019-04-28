@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"
@@ -17,16 +18,20 @@ PRIVATE void tty_do_read(TTY* p_tty);
 //调用键盘
 PUBLIC void task_tty(){
 	TTY* p_tty;
-	
-	for(p_tty=TTY_FIRST;p_tty<TTY_END;p_tty++){
-		init_tty(p_tty);
-	}
+
 	nr_current_console = 0; //默认第一个TTY
 	while(1){
 		for(p_tty=TTY_FIRST;p_tty<TTY_END;p_tty++){
 			tty_do_read(p_tty);
 			tty_do_write(p_tty);
 		}
+	}
+}
+PUBLIC void init_all_tty(){
+	TTY* p_tty;
+	
+	for(p_tty=TTY_FIRST;p_tty<TTY_END;p_tty++){
+		init_tty(p_tty);
 	}
 }
 //初始化 tty

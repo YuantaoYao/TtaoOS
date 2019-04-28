@@ -1,5 +1,6 @@
+#include "stdio.h"
 
-int printf(const char *fmt, ...){
+PUBLIC int printf(const char *fmt, ...){
 	int i;
 	char buf[256];
 	

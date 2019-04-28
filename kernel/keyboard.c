@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"
@@ -23,13 +24,28 @@ PRIVATE int column;
 
 PRIVATE KB_INPUT kb_in;
 
+PRIVATE int caps_lock;
+PRIVATE int num_lock;
+PRIVATE int scroll_lock;
+
+PRIVATE void kb_wait();
+PRIVATE void kb_ack();
+PRIVATE void set_leds();
+
 PRIVATE u8 get_byte_from_kbuf();
 //初始化键盘参数
 PUBLIC void Init_Keyboard(){
+	init_all_tty();
 	code_with_E0 = 0;
 	shift_l = shift_r = ctrl_l = ctrl_r = alt_l = alt_r = 0;
 	kb_in.count = 0;
 	kb_in.p_head = kb_in.p_tail = kb_in.buf;
+
+	caps_lock = 1;
+	num_lock = 1;
+	scroll_lock = 0;
+	
+	set_leds();
 
 	put_irq_handler(NUM_KEYBOAED_IRQ, keyboard_handler);
 	enable_irq(NUM_KEYBOAED_IRQ);
@@ -162,4 +178,31 @@ PRIVATE u8 get_byte_from_kbuf(){
 	
 	enable_int();
 	return scan_code;
+}
+
+PRIVATE void kb_wait(){ /* 等待8042 的输入缓冲区为空 */
+	u8 kb_stat;
+	
+	do{
+		kb_stat = in_port(KB_CMD);
+	}while(kb_stat & 0x02);
+}
+
+PRIVATE void kb_ack(){
+	u8 kb_read;
+	
+	do{
+		kb_read = in_port(KB_DATA);
+	}while(kb_read != KB_ACK);
+}
+
+PRIVATE void set_leds(){
+	u8 leds = (caps_lock << 2) | (num_lock << 1) | scroll_lock;
+	
+	kb_wait();
+	out_port(KB_DATA, LED_CODE);
+	kb_ack();
+	kb_wait();
+	out_port(KB_DATA, leds);
+	kb_ack();
 }

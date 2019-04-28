@@ -1,8 +1,6 @@
 #ifndef	_TTAO_CONST_H_
 #define _TTAO_CONST_H_
 
-#define	PUBLIC
-#define	PRIVATE	static
 
 /*GDT和IDT中断描述的个数 */
 #define	GDT_SIZE	128
@@ -154,7 +152,7 @@
 
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
-#define NR_SYS_CALL     1
+#define NR_SYS_CALL     2
 
 #define INT_TTAO_TEXT	0xA0
 #endif

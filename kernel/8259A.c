@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"

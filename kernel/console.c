@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"
@@ -12,6 +13,7 @@ PRIVATE void set_video_start_addr(u32 addr);
 PRIVATE void flush(CONSOLE* p_con, int nr_console);
 //初始化console 
 PUBLIC void InitScreen(TTY* p_tty){
+	
 	int nr_tty = p_tty - tty_table;
 	p_tty->p_console = console_table + nr_tty;
 	int v_mem_size = V_MEM_SIZE >> 1;

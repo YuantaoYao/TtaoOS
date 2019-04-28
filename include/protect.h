@@ -1,7 +1,5 @@
 #ifndef	_TTAO_PROTECT_H_
 #define _TTAO_PROTECT_H_
-#undef	EXTERN
-#define	EXTERN
 
 typedef struct s_descriptor{
 	u16	limit_low;     //段界限  	（2字段）

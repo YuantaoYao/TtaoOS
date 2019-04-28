@@ -1,3 +1,5 @@
+#include "stdio.h"
+#include "mem.h"
 #include "type.h"
 #include "const.h"
 #include "protect.h"

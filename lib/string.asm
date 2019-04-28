@@ -5,6 +5,7 @@ global  disp_color_str
 global	memcpy
 global  memset
 global  strcpy
+global  strlen
 ; ========================================================================
 ;                  void disp_str(char * info);
 ; ========================================================================
@@ -176,5 +177,25 @@ strcpy:
 	pop edi
 	pop esi
 	mov esp, ebp
+	pop ebp
+	ret
+	
+; ------------------------------------------------------------------------
+;             int strlen(char * str)
+; ------------------------------------------------------------------------
+strlen:
+	push ebp
+	mov ebp, esp
+
+	xor eax, eax
+	mov esi, [ebp + 8]
+	
+.1:
+	cmp byte [esi], 0
+	jz .2
+	inc esi
+	inc eax
+	jmp .1
+.2:
 	pop ebp
 	ret

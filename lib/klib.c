@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "type.h"
 #include "const.h"
 #include "func.h"
@@ -8,18 +9,18 @@ PUBLIC int Addition(int a, int b){
 
 PUBLIC void disp_int_hex(int n){
 	char output[16];
-	itoa(n, output, 16);
+	itoa(output, n, 16);
 	disp_str(output);
 } 
 
 PUBLIC void disp_int(int n){
 	char output[16];
-	itoa(n, output, 10);
+	itoa(output, n, 10);
 	disp_str(output);
 }
 
 //整形转字符串
-PUBLIC char* itoa(int num, char* str,int radix)
+PUBLIC char* itoa(char* str, int num, int radix)
 {
 	char index[]="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//索引表
 	unsigned unum;//存放要转换的整数的绝对值,转换的整数可能是负数
