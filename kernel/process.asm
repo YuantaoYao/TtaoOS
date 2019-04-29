@@ -20,9 +20,15 @@ save:
 	push es
 	push fs
 	push gs
+	
+	mov esi, edx
+	
 	mov dx, ss
 	mov ds, dx
 	mov es, dx
+	mov fs, dx
+	
+	mov edx, esi
 	
 	mov esi, esp
 	
@@ -45,14 +51,17 @@ save:
 ;===============================================================
 sys_call:
 	call save
-	push dword [p_proc_ready]
 	sti
+	push esi
 	
-	push ecx;
+	push edx
+	push ecx
 	push ebx
+	push dword [p_proc_ready]
 	call [sys_call_table + eax * 4]
-	add esp, 4 * 3
+	add esp, 4 * 4
 	
+	pop esi
 	mov [esi + EAXREG - P_STACKBASE], eax
 	
 	cli

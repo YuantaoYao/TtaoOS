@@ -6,11 +6,13 @@
 #include "tty.h"
 #include "proc.h"
 #include "func.h"
+#include "syscall.h"
 
 PUBLIC int sys_write(char* buf, int len, PROCESS * p_proc);
 
 PUBLIC int sys_get_ticks();
 
+PUBLIC int sys_send_rec(MESSAGE * msg, int function, int src_desc, PROCESS * p_proc);
 
 
 PUBLIC char task_stack[STACK_SIZE_TOTAL];
@@ -25,7 +27,7 @@ PUBLIC TASK user_task_table[NR_USER_TASKS_PROC] = {{TestA, STACK_SIZE_TESTA, "Te
 												   {TestB, STACK_SIZE_TESTB, "TestB"},
 												   {TestC, STACK_SIZE_TESTC, "TestC"}};
 									
-PUBLIC system_call sys_call_table[NR_SYS_CALL] = {sys_get_ticks, sys_write};
+PUBLIC system_call sys_call_table[NR_SYS_CALL] = {sys_get_ticks, sys_write, sys_send_rec};
 
 PUBLIC TTY tty_table[NR_CONSOLE];
 

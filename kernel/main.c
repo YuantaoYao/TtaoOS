@@ -7,6 +7,7 @@
 #include "tty.h"
 #include "proc.h"
 #include "func.h"
+#include "syscall.h"
 
 void Clean();
 void Init_Clock();
@@ -85,9 +86,11 @@ void Clean(){
 }
 
 void TestA(){
-
+	MESSAGE * msg;
+	msg->type = 7;
 	while(1){
-
+	//printf("%d",4);
+		sendrec(1, 2, msg);
 		milli_dalay(1000);
 		// disp_str("A.");		
 	}

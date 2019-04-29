@@ -152,7 +152,7 @@
 
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
-#define NR_SYS_CALL     2
+#define NR_SYS_CALL     3
 
 #define INT_TTAO_TEXT	0xA0
 #endif
