@@ -23,9 +23,9 @@ typedef struct s_gate{
 }GATE;
 
 
-EXTERN int k_reenter;
+EXTERN int k_reenter;//防重入标记位
 
-EXTERN int disp_pos;
+EXTERN int disp_pos; //输出位置
 
 EXTERN	u8	gdt_ptr[6];
 EXTERN	DESCRIPTOR	gdt[GDT_SIZE];
