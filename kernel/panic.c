@@ -10,6 +10,8 @@ PUBLIC void panic(const char *fmt, ... ){
 	
 	printl("%c !!panic!! %s", MAG_CH_PANIC, buf);
 
+	spin("panic()");
+	
 	/* should never arrive here */
 	__asm__ __volatile__("ud2");
 }

@@ -5,7 +5,7 @@
  *****************************************************************************/
 PUBLIC void spin(char * func_name)
 {
-	printl("\nspinning in %s ...\n", func_name);
+	printl("\n %s %s -- spinning in %s ...\n", __DATE__, __TIME__, func_name);
 	while (1) {}
 }
 
@@ -19,9 +19,9 @@ PUBLIC void spin(char * func_name)
  * @param base_file __BASE_FILE__
  * @param line      __LINE__
  *****************************************************************************/
-PUBLIC void assertion_failure(char *exp, char *file, char *base_file, int line){
-	printl("%c  assert(%s) failed: file: %s, base_file: %s, ln%d",
-	       MAG_CH_ASSERT,
+PUBLIC void assertion_failure(char *exp, char *file, char *base_file, int line)
+{
+	printl( "assert(%s) failed: file: %s, base_file: %s, ln: %d",
 	       exp, file, base_file, line);
 
 	/**
