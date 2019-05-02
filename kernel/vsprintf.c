@@ -3,7 +3,7 @@
 
 PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 	char* p;
-	char tmp[256];
+	char *tmp;
 	va_list p_next_args = args;
 	for(p=buf;*fmt;fmt++){
 		if(*fmt != '%'){
@@ -12,6 +12,10 @@ PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 		}
 		fmt++;
 		switch(*fmt){
+			case 'c':
+				*p++ = *((char*)p_next_args);
+				p_next_args += 4;
+				break;
 			case 'x':
 				itoa(tmp, *((int *)p_next_args), 16);
 				strcpy(p, tmp);

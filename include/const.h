@@ -147,6 +147,10 @@
 #define V_MEM_BASE		0xB8000
 #define V_MEM_SIZE		0x8000
 
+/* magic chars used by `printx' */
+#define MAG_CH_PANIC	'\002'
+#define MAG_CH_ASSERT	'\003'
+
 /* TTY */
 #define NR_CONSOLE	3
 
