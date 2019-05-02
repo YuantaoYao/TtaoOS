@@ -18,7 +18,7 @@ typedef unsigned char  u8;
 #endif
 
 
-typedef char* va_list; 
+typedef char* va_list; //不定参数接收器
 
 
 //基本输出
@@ -32,6 +32,6 @@ PUBLIC void * exchange(char * from, char * to);
 
 PUBLIC int printf(const char * fmt, ...);
 
-PUBLIC int vsprintf(char *buf, const char *fmt, va_list args);
+PUBLIC int vsprintf(char *buf, const char *fmt, va_list args);//字符处理器
 
 PUBLIC void write(char *buf, int i);

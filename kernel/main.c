@@ -89,8 +89,8 @@ void TestA(){
 	MESSAGE * msg;
 	msg->type = 7;
 	while(1){
-	//printf("%d",4);
-		sendrec(1, 2, msg);
+	    printf("%s", "xiaoming");
+	//	sendrec(1, 2, msg);
 		milli_dalay(1000);
 		// disp_str("A.");		
 	}

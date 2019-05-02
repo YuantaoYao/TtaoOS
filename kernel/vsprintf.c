@@ -30,6 +30,12 @@ PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 				p_next_args += 4;
 				p += strlen(tmp);
 				break;
+			case 's':
+				strcpy(tmp, (*((char**)p_next_args)));
+				strcpy(p, tmp);
+				p_next_args += 4;
+				p += strlen(tmp);
+				break;
 			default:
 				break;
 		}
