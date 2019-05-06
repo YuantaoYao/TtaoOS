@@ -88,10 +88,11 @@ void Clean(){
 void TestA(){
 	MESSAGE * msg;
 	msg->type = 7;
+	printf("dddddqweqwewe%sFGFDR", "vvv");
 	while(1){
 	   // printf("ddfsw");
 		// sendrec(1, 2, msg);
-		assert(1!=1);
+		// assert(1!=1);
 		milli_dalay(1000);
 		// disp_str("A.");		
 	}
