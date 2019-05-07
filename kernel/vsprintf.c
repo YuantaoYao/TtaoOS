@@ -3,11 +3,9 @@
 
 PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 	char* p;
-	char *tmp;
+	char tmp[256];
 	va_list p_next_args = args;
 	for(p=buf;*fmt;fmt++){
-		disp_str(buf);
-		disp_str("\n");
 		if(*fmt != '%'){
 			*p++ = *fmt;
 			continue;
@@ -36,20 +34,16 @@ PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 				p_next_args += 4;
 				p += strlen(tmp);
 				break;
-			case 's':
+			case 's':{
 				strcpy(tmp, (*((char**)p_next_args)));
-				disp_str(tmp);
-				//strcpy(p, tmp);
+				strcpy(p, tmp);
 				p_next_args += 4;
 				p += strlen(tmp);
 				break;
+			}
 			default:
 				break;
 		}
-		disp_str("\n");
-		disp_str("\n");
-				disp_str(buf);
-		
 	}
 	return (p - buf);
 }
