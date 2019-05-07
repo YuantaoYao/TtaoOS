@@ -2,16 +2,17 @@
 #include "const.h"
 
 
-void Get_Compile_Time(char *Year, char *Month, char *Day);
+void Get_Compile_Time(char *DATE, char *Year, char *Month, char *Day);
 int isCharEqu(char src, char des);
 /*****************************************************************************
  *                                spin
  *****************************************************************************/
 PUBLIC void spin(char * func_name)
 {
-	char Year[4],Month[2],Day[2];
-	Get_Compile_Time(Year, Month, Day);
-	//printf("\n %s \n", Month);
+	// char Year[5],Month[3],Day[3];
+	// char Date[12] = __DATE__;//取编译时间
+	// Get_Compile_Time(Date, Year, Month, Day);
+	
 	while (1) {}
 }
 
@@ -27,7 +28,7 @@ PUBLIC void spin(char * func_name)
  *****************************************************************************/
 PUBLIC void assertion_failure(char *exp, char *file, char *base_file, int line)
 {
-	printl( "assert(%s) failed: file: %s, base_file: %s, ln: %d",
+	printl( "ASSERT (%s) FILE: %s; BASEFILE: %s; LN: %d",
 	       exp, file, base_file, line);
 
 	/**
@@ -44,14 +45,12 @@ PUBLIC void assertion_failure(char *exp, char *file, char *base_file, int line)
     __asm__ __volatile__("ud2");
 }
 
-void Get_Compile_Time(char *Year, char *Month, char *Day){
+void Get_Compile_Time(char *Date, char *Year, char *Month, char *Day){
 
 	int t = 0;
 	int i;
 	int j;
 	const char *pMonth[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-	const char Date[12] = __DATE__;//取编译时间
 
 	Year[0] = Date[7];
 	Year[1] = Date[8];
@@ -59,9 +58,10 @@ void Get_Compile_Time(char *Year, char *Month, char *Day){
 	Year[3] = Date[10];
 	Year[4] = '\0';
 	
-	char firstChar = Date[4];
-	printf("\n %c \n", firstChar);
 	Day[0] = Date[4];
+	if(Date[4] == ' '){
+		Day[0] = '0';
+	}
 	Day[1] = Date[5];
 	Day[2] = '\0';
 	
@@ -74,11 +74,12 @@ void Get_Compile_Time(char *Year, char *Month, char *Day){
 					i++;
 					if(i<10){
 						Month[0] = '0';
-						itoa(&Month[1] , i, 10) ;
+						itoa(&Month[1] , i, 10);
+						Month[2] = '\0'; 
 					}else{
-						itoa(Month , i, 10) ;
+						itoa(Month , i, 10);
+						Month[2] = '\0';
 					}
-					Month = (char *)i++;
 				}
 			}else{
 				t = 0;

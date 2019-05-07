@@ -92,6 +92,7 @@ void TestA(){
 	   // printf("ddfsw");
 		// sendrec(1, 2, msg);
 		assert(1!=1);
+		
 		milli_dalay(1000);
 		// disp_str("A.");		
 	}
