@@ -18,15 +18,10 @@ PUBLIC void kernel_main(){
 	Init_Clock();
 	Init_Keyboard();
 	
-	proc_table[0].ticks = proc_table[0].priority = 1;
-	proc_table[1].ticks = proc_table[1].priority = 5;
-	proc_table[2].ticks = proc_table[2].priority = 5;
-	proc_table[3].ticks = proc_table[3].priority = 5;
-	
-	proc_table[0].nr_tty = 0;
-	proc_table[1].nr_tty = 0;
-	proc_table[2].nr_tty = 0;
-	proc_table[3].nr_tty = 0;
+	for(int i=0;i<NR_ALL_TASKS_PROC;i++){
+		proc_table[i].ticks = proc_table[i].priority = 5;
+		proc_table[i].nr_tty = 0;
+	}
 	
 	k_reenter = 0;
 	ticks = 0;
@@ -93,25 +88,39 @@ void Clean(){
 	disp_pos=0;
 }
 
+PUBLIC int get_ticks(){
+	int ret = 0;
+
+	MESSAGE msg;
+	reset_msg(&msg);
+	msg.type = GET_TICKS;
+	// send_rec(BOTH, TASK_SYS, &msg);
+	ret = sendrec(SEND, TASK_SYS, &msg);
+	if (ret == 0)
+		ret = sendrec(RECEIVE, TASK_SYS, &msg);
+	return msg.u.m1.mli1;
+}
+
+
 void TestA(){
+
 	while(1){
-		sendrec(SEND, 2, 0);
-		printf("A");
-		milli_dalay(1000);	
+		printf("%d.", get_ticks());
+		milli_dalay(100);
 	}
 }
 
 void TestB(){
 	while(1){
-		printf("B");
-		milli_dalay(100); 
+		 milli_dalay(100);
+		printf("B."); 
 	}
 }
 
 void TestC(){ 
 	while(1){
-		printf(".C");
-		milli_dalay(100);
-		// disp_str("C.");  
+		milli_dalay(100); 
+		printf("C.");  
 	}
 }
+

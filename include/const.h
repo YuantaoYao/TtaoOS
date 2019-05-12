@@ -13,18 +13,25 @@
 
 #define NR_IRQ 		16 /* 定义中断数量 两片A8659A */
 
-#define	NR_SYS_TASKS_PROC	1  /* 定义允许的最大系统进程数 */
+#define	NR_SYS_TASKS_PROC	2  /* 定义允许的最大系统进程数 */
 #define	NR_USER_TASKS_PROC	3  /* 定义允许的最大用户进程数 */
 
 #define NR_ALL_TASKS_PROC	NR_SYS_TASKS_PROC + NR_USER_TASKS_PROC
 
 #define STACK_SIZE_TTY_TASK	0x8000
+#define STACK_SIZE_SYS_TASK 0x8000
 
 #define STACK_SIZE_TESTA 0x8000
 #define STACK_SIZE_TESTB 0x8000	
 #define STACK_SIZE_TESTC 0x8000	
 
-#define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
+#define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_SYS_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
+
+#define TASK_TTY	0
+#define TASK_SYS	1
+#define TASK_TESTA	2
+#define TASK_TESTB	3
+#define TASK_TESTC	4
 
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */
@@ -177,12 +184,6 @@
 #define ANY (NR_ALL_TASKS_PROC + 10)
 #define NO_TASK (NR_ALL_TASKS_PROC + 20)
 
-enum msgtype{
-	HARD_INT = 1,
-	
-	/* SYS task */
-	GET_TICKS,
-};
 
 /* Color */
 /*

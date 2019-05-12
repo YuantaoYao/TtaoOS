@@ -38,17 +38,16 @@ PUBLIC void keyboard_handler(int irq);
 PUBLIC void disable_int();
 PUBLIC void enable_int();
 
-//tty
-PUBLIC void task_tty();
-
 //初始化中断
 PUBLIC void Init_Keyboard();
 PUBLIC void Init_Clock();
 
+//syscall
+PUBLIC void task_tty();
+PUBLIC void task_sys();
+
 PUBLIC void TestA();
-
 PUBLIC void TestB();
-
 PUBLIC void TestC();
 
 PUBLIC void sys_call();

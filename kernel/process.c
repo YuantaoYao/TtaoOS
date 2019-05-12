@@ -9,6 +9,8 @@
 #include "func.h"
 #include "syscall.h"
 
+PUBLIC void proc_schedule();
+
 PUBLIC int sys_printx( PROCESS* p_proc, char* buf, int _unused2, int _unused1);
 PUBLIC int sys_write(PROCESS * p_proc, char* buf, int len);
 PUBLIC int sys_get_ticks();
@@ -83,12 +85,11 @@ PUBLIC int sys_printx( PROCESS* p_proc, char* buf, int _unused2, int _unused1){
 }
 
 PRIVATE void block(PROCESS * p){
-	p->p_flags = 1;
 	assert(p->p_flags);
+	proc_schedule();
 }
 
 PRIVATE void unblock(PROCESS * p){
-	p->p_flags = 0;
 	assert(p->p_flags == 0);
 }
 //判断消息的发送是不是安全 如果 发送目标不处于对其他进程发送消息的状态 则返回 0 
@@ -122,13 +123,12 @@ PRIVATE int deadlock(int src, int dest){
 PUBLIC int sys_send_rec(PROCESS * p_proc, int function, int src_dest, MESSAGE * msg){
 	assert(k_reenter == 0);
 	assert((src_dest >= 0 && src_dest < NR_ALL_TASKS_PROC) || src_dest == ANY || src_dest == INTERRUPT);
-	
 	int ret = 0;
 	int caller = proc2pid(p_proc);
 	
 	MESSAGE* mla = (MESSAGE*)va2la(caller, msg);
 	mla->source = caller;
-	
+
 	assert(mla->source != src_dest); //判断是不是发给自己的
 	
 	if(function == SEND){
@@ -147,28 +147,37 @@ PUBLIC int sys_send_rec(PROCESS * p_proc, int function, int src_dest, MESSAGE * 
 }
 //消息发送
 PRIVATE int msg_send(PROCESS * p_proc, int dest, MESSAGE * msg){
+	
 	PROCESS* sender = p_proc;
 	PROCESS* p_dest = proc_table + dest;
-	
 	assert(proc2pid(sender) != dest); //确定不是发送给自己	
 	
 	if(deadlock(proc2pid(sender), dest)){
 		panic(">>deadlock()<< %s, %s ", sender->name, p_dest->name);
 	}
 	//目标进程处于接收src进程 或 ANY 进程的状态
-	if((p_dest->p_flags & RECEIVE) && (p_dest->p_recvfrom == proc2pid(sender) || p_dest->p_recvfrom == ANY)){
-			assert(p_dest->p_msg);
+	if((p_dest->p_flags & RECEIVING) && (p_dest->p_recvfrom == proc2pid(sender) || p_dest->p_recvfrom == ANY)){
 			assert(msg);
 			
 			phys_copy(va2la(dest, p_dest->p_msg),
 					  va2la(proc2pid(sender), msg),
 					  sizeof(MESSAGE));
 			p_dest->p_msg = 0;
-			p_dest->p_flags &= ~RECEIVE;
+			p_dest->p_flags &= ~RECEIVING; //因为目标进程已经接收了消息 这里取消接收状态
 			p_dest->p_recvfrom = NO_TASK;
 			unblock(p_dest);
-		}else{
+			
+			assert(p_dest->p_flags == 0);
+			assert(p_dest->p_msg == 0);
+			assert(p_dest->p_recvfrom == NO_TASK);
+			assert(p_dest->p_sendto == NO_TASK);
+			assert(sender->p_flags == 0);
+			assert(sender->p_msg == 0);
+			assert(sender->p_recvfrom == NO_TASK);
+			assert(sender->p_sendto == NO_TASK);
+	}else{
 			sender->p_flags |= SENDING;
+			assert(sender->p_flags == SENDING);
 			sender->p_sendto = dest;
 			sender->p_msg = msg;
 			
@@ -185,7 +194,12 @@ PRIVATE int msg_send(PROCESS * p_proc, int dest, MESSAGE * msg){
 			sender->next_sending = 0;
 			
 			block(sender);
-		}
+			
+			assert(sender->p_flags == SENDING);
+			assert(sender->p_msg != 0);
+			assert(sender->p_recvfrom == NO_TASK);
+			assert(sender->p_sendto == dest);
+	}
 
 	return 0;
 }
@@ -211,21 +225,93 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 		
 		receiver->has_int_msg = 0;
 		
+		assert(receiver->p_flags == 0);
+		assert(receiver->p_msg == 0);
+		assert(receiver->p_sendto == NO_TASK);
+		assert(receiver->has_int_msg == 0);
+		
 		return 0;
 	}
 	if(src == ANY){
 		if(receiver->first_sending){
 			p_from = receiver->first_sending;
 			copyok = 1;
+			
+			assert(receiver->p_flags == 0);
+			assert(receiver->p_msg == 0);
+			assert(receiver->p_recvfrom == NO_TASK);
+			assert(receiver->p_sendto == NO_TASK);
+			assert(receiver->first_sending != 0);
+			assert(receiver->next_sending == 0);
+			assert(p_from->p_flags == SENDING);
+			assert(p_from->p_msg != 0);
+			assert(p_from->p_recvfrom == NO_TASK);
+			assert(p_from->p_sendto == proc2pid(receiver));
 		}
-	}else{
+	}else if (src >= 0 && src < NR_ALL_TASKS_PROC){
+		assert(src);
+		
 		p_from = &proc_table[src];
+		if ((p_from->p_flags & SENDING) && (p_from->p_sendto == proc2pid(receiver))){
+			copyok = 1;
+			PROCESS* p = receiver->first_sending;
+			assert(p);
+			while(p){
+				assert(p_from->p_flags & SENDING);
+				if(proc2pid(p) == src){
+					p_from = p;
+					break;
+				}
+				prev = p;
+				p = p->next_sending;
+			}
+			
+			assert(receiver->p_flags == 0);
+			assert(receiver->p_msg == 0);
+			assert(receiver->p_recvfrom == NO_TASK);
+			assert(receiver->p_sendto == NO_TASK);
+			assert(receiver->first_sending != 0);
+			assert(p_from->p_flags == SENDING);
+			assert(p_from->p_msg != 0);
+			assert(p_from->p_recvfrom == NO_TASK);
+			assert(p_from->p_sendto == proc2pid(receiver));
+		}
 	}
 	
 	if(copyok){
+		if(p_from == receiver->first_sending){
+			assert(prev == 0);
+			receiver->first_sending = p_from->next_sending;
+			p_from->next_sending = 0;
+		}else{
+			assert(prev);
+			prev->next_sending = p_from->next_sending;
+			p_from->next_sending = 0;
+		}
+		assert(msg);
+		assert(p_from->p_msg);
 		
+		phys_copy(va2la(proc2pid(receiver), msg), va2la(proc2pid(p_from), p_from->p_msg), sizeof(MESSAGE));
+		
+		p_from->p_msg = 0;
+		p_from->p_flags &= ~SENDING; //因为目标进程已经接收了消息 这里取消接收状态
+		p_from->p_sendto = NO_TASK;
+		unblock(p_from);
 	}else{
+		receiver->p_flags |= RECEIVING;
+		receiver->p_msg = msg;
+		if(src == ANY){
+			receiver->p_recvfrom = ANY;
+		}else{
+			receiver->p_recvfrom = proc2pid(p_from);
+		}
+		block(receiver);	
 
+		assert(receiver->p_flags == RECEIVING);
+		assert(receiver->p_msg != 0);
+		assert(receiver->p_recvfrom != NO_TASK);
+		assert(receiver->p_sendto == NO_TASK);
+		assert(receiver->has_int_msg == 0);
 	}
 	
 	return 0;

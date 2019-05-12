@@ -7,6 +7,8 @@
 #include "proc.h"
 #include "func.h"
 
+PUBLIC void proc_schedule();
+
 PUBLIC void clock_handler(int irq){
 	ticks++;
 	
@@ -20,6 +22,10 @@ PUBLIC void clock_handler(int irq){
 		return ;
 	}
 	
+	proc_schedule();
+}
+
+PUBLIC void proc_schedule(){
 	int greatest_ticks = 0;
 	PROCESS *p;
 	while(!greatest_ticks){

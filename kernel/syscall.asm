@@ -1,16 +1,11 @@
 %include "kernel/include/proc.inc"
 
 _NR_printx	  equ 0
-_NR_get_ticks equ 1
-_NR_write	  equ 2
-_NR_sendrec   equ 3
+_NR_write	  equ 1
+_NR_sendrec   equ 2
 INT_VECTOR_SYS_CALL equ 0x90
-INT_TTAO_TEXT equ 0xA0
-extern disp_int
 
 global printx
-global get_ticks
-global int_ttao
 global write
 global sendrec
 
@@ -23,11 +18,6 @@ printx:
 	int INT_VECTOR_SYS_CALL
 	ret
 
-get_ticks:
-	mov eax, _NR_get_ticks
-	int INT_VECTOR_SYS_CALL
-	ret
-	
 write:
 	mov eax, _NR_write
 	mov ebx, [esp + 4]
