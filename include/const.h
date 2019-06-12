@@ -38,6 +38,7 @@
 
 #define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_SYS_TASK + STACK_SIZE_HD_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
 
+#define INVALID_DRIVER	-20
 #define INTERRUPT	-10
 
 #define TASK_TTY	0
@@ -214,6 +215,24 @@
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
 #define NR_SYS_CALL    4
+
+/**
+*major device number （主设备号）
+*
+*/
+#define NO_DEV			0
+#define DEV_FLOPPY		1
+#define	DEV_CDROM		2
+#define DEV_HD			3
+#define	DEV_CHAR_TTY	4
+#define DEV_SCSI		5
+
+/***定义设备号**/
+#define MAJOR_SHIFT		8
+#define MAKE_DEV(a, b)	((a << MAJOR_SHIFT) | b)
+/**获取主次设备号*/
+#define	MAJOR(x)		((x >> MAJOR_SHIFT) & 0xFF)
+#define MINOR(x)		(x & 0xFF)
 
 #define INT_TTAO_TEXT	0xA0
 #endif

@@ -7,6 +7,7 @@
 #include "tty.h"
 #include "func.h"
 #include "proc.h"
+#include "fs.h"
 
 PUBLIC int sys_printx( PROCESS* p_proc, char* buf, int _unused2, int _unused1);
 
@@ -35,3 +36,12 @@ PUBLIC TTY tty_table[NR_CONSOLE];
 PUBLIC int cursor_table[NR_CONSOLE];
 
 PUBLIC CONSOLE console_table[NR_CONSOLE];
+
+struct dev_drv_map dd_map[] = {
+	{INVALID_DRIVER},
+	{INVALID_DRIVER},
+	{INVALID_DRIVER},
+	{TASK_HD},
+	{TASK_TTY},
+	{INVALID_DRIVER}
+};

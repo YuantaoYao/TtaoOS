@@ -35,7 +35,7 @@ PUBLIC void task_hd(){
 		int drive = msg.u.m1.mli1;
 		switch(msg.type){
 			case DEV_OPEN:{
-				hd_identify(drive);
+				hd_open(drive);
 				break;
 			}
 			default:
