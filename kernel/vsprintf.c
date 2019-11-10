@@ -41,6 +41,12 @@ PUBLIC int vsprintf(char *buf, const char *fmt, va_list args){
 				p += strlen(tmp);
 				break;
 			}
+			case 'p':
+				itoa(tmp, *((int *)((unsigned) (p_next_args))), 16);//注：指针的类型 其实是 unsigned
+				strcpy(p, tmp);
+				p_next_args += 4;
+				p += strlen(tmp);
+				break;
 			default:
 				break;
 		}

@@ -19,7 +19,7 @@ PUBLIC void kernel_main(){
 	Init_Keyboard();
 	
 	proc_table[0].ticks = proc_table[0].priority = 1;
-	proc_table[1].ticks = proc_table[1].priority = 10;
+	proc_table[1].ticks = proc_table[1].priority = 5;
 	proc_table[2].ticks = proc_table[2].priority = 5;
 	proc_table[3].ticks = proc_table[3].priority = 5;
 	
@@ -69,6 +69,14 @@ PUBLIC void kernel_main(){
 		
 		p_proc->regs.eflags = eflags;
 		
+		p_proc->p_flags = 0;
+		p_proc->p_msg = 0;
+		p_proc->p_recvfrom = NO_TASK;
+		p_proc->p_sendto = NO_TASK;
+		p_proc->has_int_msg = 0;
+		p_proc->first_sending = 0;
+		p_proc->next_sending = 0;
+		
 		p_task_stack -= p_task->stacksize;
 		p_proc++;
 		selector_ldt += 1 << 3;
@@ -86,27 +94,23 @@ void Clean(){
 }
 
 void TestA(){
-	MESSAGE * msg;
-	reset_msg(msg);
-	msg->type = 7;
 	while(1){
-		sendrec(SEND, 2, msg);
+		sendrec(SEND, 2, 0);
+		printf("A");
 		milli_dalay(1000);	
 	}
 }
 
 void TestB(){
-
 	while(1){
+		printf("B");
 		milli_dalay(100); 
-		
 	}
 }
 
-void TestC(){
-	 
+void TestC(){ 
 	while(1){
-		//printf(".D");
+		printf(".C");
 		milli_dalay(100);
 		// disp_str("C.");  
 	}

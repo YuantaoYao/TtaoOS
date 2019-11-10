@@ -91,21 +91,24 @@ PRIVATE void unblock(PROCESS * p){
 	p->p_flags = 0;
 	assert(p->p_flags == 0);
 }
-//判断消息的发送是不是安全
+//判断消息的发送是不是安全 如果 发送目标不处于对其他进程发送消息的状态 则返回 0 
+//否则 ：首先判断 其发送目标是不是 src 进程 则查询 dest的发送队列 循环查看是不是有进程 正在发送消息给 src
+//如果找到的确有进程正在给src 发送消息  则 返回 1  表示 当前 消息的发送 不安全 （有进入死锁的可能）
 PRIVATE int deadlock(int src, int dest){
 	PROCESS * p = proc_table + dest;
 	while(1){
 		if(p->p_flags & SENDING){
 			if(p->p_sendto == src){
+				p = proc_table + src;
+				printl("src:%s", p->name);
 				p = proc_table + dest;
-				printl("=_= %s", p->name);
+				printl(" --->> %s", p->name);
 				do{
 					//assert(p->msg);
 					p = proc_table + p->p_sendto;
-					printl("-> %s", p->name);
+					printl(" -> %s", p->name);
 				}while(p != proc_table + src);
-				printl("=_=");
-				
+					printl("   Message Sending Insecure!!!");
 				return 1;
 			}
 			p = proc_table + p->p_sendto;
@@ -147,12 +150,12 @@ PRIVATE int msg_send(PROCESS * p_proc, int dest, MESSAGE * msg){
 	PROCESS* sender = p_proc;
 	PROCESS* p_dest = proc_table + dest;
 	
-	assert(proc2pid(sender) != dest);
+	assert(proc2pid(sender) != dest); //确定不是发送给自己	
 	
 	if(deadlock(proc2pid(sender), dest)){
 		panic(">>deadlock()<< %s, %s ", sender->name, p_dest->name);
 	}
-	
+	//目标进程处于接收src进程 或 ANY 进程的状态
 	if((p_dest->p_flags & RECEIVE) && (p_dest->p_recvfrom == proc2pid(sender) || p_dest->p_recvfrom == ANY)){
 			assert(p_dest->p_msg);
 			assert(msg);
@@ -170,13 +173,13 @@ PRIVATE int msg_send(PROCESS * p_proc, int dest, MESSAGE * msg){
 			sender->p_msg = msg;
 			
 			PROCESS* p;
-			if(p_dest->q_sending){
-				p = p_dest->q_sending;
+			if(p_dest->first_sending){
+				p = p_dest->first_sending;
 				while(p->next_sending)
 					p = p->next_sending;
 				p->next_sending = sender;
 			}else{
-				p_dest->q_sending = sender;
+				p_dest->first_sending = sender;
 			}
 			
 			sender->next_sending = 0;
@@ -191,9 +194,10 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 	PROCESS* receiver = p_proc;
 	PROCESS* p_from = 0;
 	PROCESS* prev = 0;
+	
 	int copyok = 0;
 	
-	assert(proc2pid(receiver) != src);
+	assert(proc2pid(receiver) != src);//接收者不能和发送者是同一进程
 
 	if((receiver->has_int_msg) && ((src == ANY) || (src == INTERRUPT))){
 		
@@ -210,8 +214,8 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 		return 0;
 	}
 	if(src == ANY){
-		if(receiver->q_sending){
-			p_from = receiver->q_sending;
+		if(receiver->first_sending){
+			p_from = receiver->first_sending;
 			copyok = 1;
 		}
 	}else{

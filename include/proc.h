@@ -61,17 +61,17 @@ typedef struct s_process{
 	char name[16];	 //进程名称
 	
 	int p_flags;        /* 0 程序正在运行 或 准备运行
-						SENDING 进程处于发送消息状态（进程被阻塞）
-						RECEIVING 进程处于消息接收状态 （进程被阻塞） */
+						   SENDING 进程处于发送消息状态（进程被阻塞）
+						   RECEIVING 进程处于消息接收状态 （进程被阻塞） */
 	
 	struct msg * p_msg; //指向消息体的指针
 	
-	int p_recvfrom; //进程的接收对象
-	int p_sendto;   //进程的发送对象
+	int p_recvfrom; //本进程想要接收消息 但当前并没有进程给他发送消息 本字段记录本进程想要从哪个进程接收消息
+	int p_sendto;   //本进程想要发送消息 但当前并没有进程想要接收他的消息 本字段记录本进程想要把消息发送给哪个进程
 	
 	int has_int_msg;  //发送中断置位
 	
-	struct s_process * q_sending;//指向以本进程为发送目标的进程队列的 第一个进程
+	struct s_process * first_sending;//如果本进程没有准备好接收消息，则本进程的q_sending 指向希望 向本进程发送消息的进程消息队列的 首地址
 	
 	struct s_process * next_sending; // 进程队列的下一个进程
 	

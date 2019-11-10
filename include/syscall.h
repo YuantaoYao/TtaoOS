@@ -36,7 +36,14 @@ typedef struct msg{
 	}u;
 }MESSAGE;
 
-
+/***
+  *微内核的消息机制，
+  * function: SEND 消息发送 RECEIVE 消息接收
+  * src_desc: 目标进程
+  * msg:	消息体
+  *
+  *
+  ***/   
 PUBLIC void sendrec(int function, int src_desc, MESSAGE * msg);
 
 //格式化消息内存
