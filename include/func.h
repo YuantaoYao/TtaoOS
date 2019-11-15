@@ -38,13 +38,17 @@ PUBLIC void keyboard_handler(int irq);
 PUBLIC void disable_int();
 PUBLIC void enable_int();
 
+PUBLIC void inform_int(int task_nr);//通知进程发生了中断
+
 //初始化中断
 PUBLIC void Init_Keyboard();
 PUBLIC void Init_Clock();
+PUBLIC void Init_Hd();
 
 //syscall
 PUBLIC void task_tty();
 PUBLIC void task_sys();
+PUBLIC void task_hd();
 
 PUBLIC void TestA();
 PUBLIC void TestB();
@@ -52,10 +56,11 @@ PUBLIC void TestC();
 
 PUBLIC void sys_call();
 
-PUBLIC int  get_ticks();
-
 PUBLIC void milli_dalay(int milli_sec);
 
 #define proc2pid(x) (x - proc_table)
+
+#include "usercall.h"
+#include "hd.h"
 
 #endif

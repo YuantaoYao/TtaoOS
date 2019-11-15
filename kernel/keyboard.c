@@ -35,7 +35,7 @@ PRIVATE void set_leds();
 PRIVATE u8 get_byte_from_kbuf();
 //初始化键盘参数
 PUBLIC void Init_Keyboard(){
-	init_all_tty();
+	
 	code_with_E0 = 0;
 	shift_l = shift_r = ctrl_l = ctrl_r = alt_l = alt_r = 0;
 	kb_in.count = 0;

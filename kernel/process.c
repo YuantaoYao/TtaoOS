@@ -262,7 +262,7 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 					p_from = p;
 					break;
 				}
-				prev = p;
+				prev = p;//保存正式发送者的上一个进程
 				p = p->next_sending;
 			}
 			
@@ -282,7 +282,8 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 		if(p_from == receiver->first_sending){
 			assert(prev == 0);
 			receiver->first_sending = p_from->next_sending;
-			p_from->next_sending = 0;
+			receiver->next_sending = 0;
+
 		}else{
 			assert(prev);
 			prev->next_sending = p_from->next_sending;
@@ -297,6 +298,11 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 		p_from->p_flags &= ~SENDING; //因为目标进程已经接收了消息 这里取消接收状态
 		p_from->p_sendto = NO_TASK;
 		unblock(p_from);
+		
+		assert(p_from->p_msg == 0);
+		assert(p_from->p_flags == 0);
+		assert(p_from->p_sendto == NO_TASK);
+
 	}else{
 		receiver->p_flags |= RECEIVING;
 		receiver->p_msg = msg;
@@ -339,4 +345,46 @@ PUBLIC int ldt_seg_linear(PROCESS* p, int idx){
 /* 格式化消息体 */
 PUBLIC void reset_msg(MESSAGE *msg){
 	memset(msg, 0, sizeof(MESSAGE));
+}
+/**
+ * <Ring 0> 通知进程发生了中断 
+ *
+ *
+ *
+ */
+PUBLIC void inform_int(int task_nr){
+	PROCESS* p = proc_table + task_nr;
+	
+	if((p->p_flags & RECEIVING) &&((p->p_recvfrom == INTERRUPT) || (p->p_recvfrom == ANY)) ){
+		p->p_msg->source = INTERRUPT;
+		p->p_msg->type = HARD_INT;
+		p->p_msg = 0;
+		p->has_int_msg = 0;
+		p->p_flags &= ~RECEIVING;
+		p->p_recvfrom = NO_TASK;
+		assert(p->p_flags == 0);
+		unblock(p);
+		
+		assert(p->p_flags == 0);
+		assert(p->p_msg == 0);
+		assert(p->p_recvfrom == NO_TASK);
+		assert(p->p_sendto == NO_TASK);
+		
+	}else{
+		p->has_int_msg = 1;
+	}
+}
+
+PUBLIC void dump_msg(const char * title, MESSAGE * m){
+	printl("DUMP_MSG: {%s}< 0x%x Name:%s drive:%d {%d,%d,%d,%d,}",
+		title,
+		(int)m,
+		proc_table[m->source].name,
+		m->source,
+		m->u.m3.m3il,
+		m->u.m3.m3i2,
+		m->u.m3.m3i3,
+		m->u.m3.m3i4
+	);
+
 }

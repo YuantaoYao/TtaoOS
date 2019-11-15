@@ -33,6 +33,6 @@ PUBLIC void InitScreen(TTY* p_tty);
 PUBLIC void select_console(int nr_console);
 PUBLIC void scroll_screen(CONSOLE* p_con, int directhion);
 PUBLIC void put_a_key(u32 key, TTY* p_tty);
-PUBLIC void init_all_tty();
+PUBLIC void Init_Tty();
 
 #endif

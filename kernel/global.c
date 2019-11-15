@@ -18,8 +18,9 @@ PUBLIC char task_stack[STACK_SIZE_TOTAL];
 
 PUBLIC irq_handler irq_table[NR_IRQ];
 
-PUBLIC TASK sys_task_table[NR_SYS_TASKS_PROC] = {{task_tty, STACK_SIZE_TTY_TASK, "task_tty"},
-												 {task_sys, STACK_SIZE_SYS_TASK, "task_sys"}}; //系统任务
+PUBLIC TASK sys_task_table[NR_SYS_TASKS_PROC] = {{task_tty, STACK_SIZE_TTY_TASK, "task_tty"},				//用于tty的调用		
+												 {task_sys, STACK_SIZE_SYS_TASK, "task_sys"},
+												 {task_hd,  STACK_SIZE_HD_TASK,  "task_hd"}}; //系统任务   // 进程间通信引擎
 
 PUBLIC TASK user_task_table[NR_USER_TASKS_PROC] = {{TestA, STACK_SIZE_TESTA, "TestA"},      
 												   {TestB, STACK_SIZE_TESTB, "TestB"},

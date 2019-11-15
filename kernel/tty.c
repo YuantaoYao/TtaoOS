@@ -11,7 +11,7 @@
 #define TTY_FIRST  (tty_table)
 #define TTY_END    (tty_table + NR_CONSOLE)
 
-PRIVATE void init_tty(TTY* p_tty);
+PRIVATE void init_a_tty(TTY* p_tty);
 PRIVATE void tty_do_write(TTY* p_tty);
 PRIVATE void tty_do_read(TTY* p_tty);
 
@@ -27,15 +27,15 @@ PUBLIC void task_tty(){
 		}
 	}
 }
-PUBLIC void init_all_tty(){
+PUBLIC void Init_Tty(){
 	TTY* p_tty;
 	
 	for(p_tty=TTY_FIRST;p_tty<TTY_END;p_tty++){
-		init_tty(p_tty);
+		init_a_tty(p_tty);
 	}
 }
 //初始化 tty
-PRIVATE void init_tty(TTY* p_tty){
+PRIVATE void init_a_tty(TTY* p_tty){
 	InitScreen(p_tty);
 	p_tty->inbuf_count = 0;
 	p_tty->p_inbuf_head = p_tty->p_inbuf_tail = p_tty->in_buf;

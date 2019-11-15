@@ -13,11 +13,13 @@ void Clean();
 void Init_Clock();
 
 PUBLIC void kernel_main(){
-	
 	Clean();
+
 	Init_Clock();
 	Init_Keyboard();
-	
+	Init_Tty();
+	Init_Hd();
+
 	for(int i=0;i<NR_ALL_TASKS_PROC;i++){
 		proc_table[i].ticks = proc_table[i].priority = 5;
 		proc_table[i].nr_tty = 0;
@@ -88,39 +90,25 @@ void Clean(){
 	disp_pos=0;
 }
 
-PUBLIC int get_ticks(){
-	int ret = 0;
-
-	MESSAGE msg;
-	reset_msg(&msg);
-	msg.type = GET_TICKS;
-	// send_rec(BOTH, TASK_SYS, &msg);
-	ret = sendrec(SEND, TASK_SYS, &msg);
-	if (ret == 0)
-		ret = sendrec(RECEIVE, TASK_SYS, &msg);
-	return msg.u.m1.mli1;
-}
-
-
 void TestA(){
-
 	while(1){
-		printf("%d.", get_ticks());
-		milli_dalay(100);
+		dev_open(1);
+		/* printf("<Ticks : %d>.", get_ticks()); */
+		milli_dalay(1000);
 	}
 }
 
 void TestB(){
 	while(1){
-		 milli_dalay(100);
-		printf("B."); 
+		dev_open(2);
+		/* printf("<Ticks : %d>.", get_ticks()); */
+		milli_dalay(1000);
 	}
 }
 
 void TestC(){ 
 	while(1){
-		milli_dalay(100); 
-		printf("C.");  
+		
 	}
 }
 

@@ -9,7 +9,6 @@
 #include "proc.h"
 #include "func.h"
 
-
 PUBLIC void task_sys(){
 	MESSAGE msg;
 	while(1){
@@ -26,4 +25,23 @@ PUBLIC void task_sys(){
 				break;
 		}
 	}
+}
+
+PUBLIC void task_hd(){
+	MESSAGE msg;
+	while(1){
+		sendrec(RECEIVE, ANY, &msg);
+		int src = msg.source;
+		int drive = msg.u.m1.mli1;
+		switch(msg.type){
+			case DEV_OPEN:{
+				hd_identify(drive);
+				break;
+			}
+			default:
+				panic("unkown msg type!!");
+				break;
+		}
+	}
+
 }

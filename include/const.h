@@ -13,25 +13,38 @@
 
 #define NR_IRQ 		16 /* 定义中断数量 两片A8659A */
 
-#define	NR_SYS_TASKS_PROC	2  /* 定义允许的最大系统进程数 */
+/* 中断码 */
+#define NUM_CLOCK_IRQ	0
+#define NUM_KEYBOAED_IRQ 1
+#define NUM_CASCADE_IRQ 2 /* 开启改中断是为了使用第二块8259A 中断控制芯片*/
+#define NUM_TTY2_IRQ	3 /* tty2 */
+#define NUM_TTY3_IRQ	4 /* tty1 */
+#define NUM_XT_WINI_IRQ	5 /* XT Whechester*/
+#define NUM_FLOPPY_IRQ	6 /* 软驱 */
+#define NUM_AT_WINI_IRQ	14 /* AT Winchester*/
+
+#define	NR_SYS_TASKS_PROC	3  /* 定义允许的最大系统进程数 */
 #define	NR_USER_TASKS_PROC	3  /* 定义允许的最大用户进程数 */
 
 #define NR_ALL_TASKS_PROC	NR_SYS_TASKS_PROC + NR_USER_TASKS_PROC
 
 #define STACK_SIZE_TTY_TASK	0x8000
 #define STACK_SIZE_SYS_TASK 0x8000
+#define STACK_SIZE_HD_TASK  0x8000
 
 #define STACK_SIZE_TESTA 0x8000
 #define STACK_SIZE_TESTB 0x8000	
 #define STACK_SIZE_TESTC 0x8000	
 
-#define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_SYS_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
+#define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_SYS_TASK + STACK_SIZE_HD_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
 
 #define TASK_TTY	0
 #define TASK_SYS	1
-#define TASK_TESTA	2
-#define TASK_TESTB	3
-#define TASK_TESTC	4
+#define TASK_HD		2
+
+#define TASK_TESTA	3
+#define TASK_TESTB	4
+#define TASK_TESTC	5
 
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */
@@ -139,10 +152,6 @@
 #define	TIMER2	0x42
 #define TIMER_MODE	0x43
 
-/* 中断码 */
-#define NUM_CLOCK_IRQ	0
-#define NUM_KEYBOAED_IRQ 1
-
 /* 825芯片 */
 #define TIMER_FREQ	1193182L
 #define HZ	100
@@ -180,6 +189,10 @@
 #define SCREEN_SIZE		(25 * 80)
 
 #define INTERRUPT	-10
+#define	TASK_TTY	0
+#define	TASK_SYS	1
+#define TASK_HD		2
+
 
 #define ANY (NR_ALL_TASKS_PROC + 10)
 #define NO_TASK (NR_ALL_TASKS_PROC + 20)

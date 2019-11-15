@@ -1,5 +1,7 @@
 #ifndef	_ORANGES_KEYBOARD_H_
 #define _ORANGES_KEYBOARD_H_
+
+
 #define RAED_KB_CODE 0x60 //读8042端口
 
 #define	KB_IN_BYTES	32 //键盘缓存大小
@@ -117,5 +119,4 @@ typedef struct s_kb{
 
 //键盘处理程序
 PUBLIC void keyboard_read(TTY* p_tty);
-
 #endif

@@ -73,11 +73,11 @@ global hwint0F
 %endmacro 
 
 ALIGN 16
-hwint00:
+hwint00: ;时钟中断
 	hwint_master 0
 	
 ALIGN 16
-hwint01:
+hwint01: ;键盘中断
 	hwint_master 1
 	
 ALIGN 16

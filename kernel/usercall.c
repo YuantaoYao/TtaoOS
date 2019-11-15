@@ -9,30 +9,27 @@
 #include "proc.h"
 #include "global.h"
 #include "func.h"
-PUBLIC int send_rec(int function, int src_dest, MESSAGE* msg);
 
-
-PUBLIC int send_rec(int function, int src_dest, MESSAGE* msg){
+PUBLIC int get_ticks(){
 	int ret = 0;
 
-	if (function == RECEIVE)
-		memset(msg, 0, sizeof(MESSAGE));
+	MESSAGE msg;
+	reset_msg(&msg);
+	msg.type = GET_TICKS;
+	// send_rec(BOTH, TASK_SYS, &msg);
+	ret = sendrec(SEND, TASK_SYS, &msg);
+	if (ret == 0)
+		ret = sendrec(RECEIVE, TASK_SYS, &msg);
+	return msg.u.m1.mli1;
+}
 
-	switch (function) {
-	case BOTH:
-		ret = sendrec(SEND, src_dest, msg);
-		if (ret == 0)
-			ret = sendrec(RECEIVE, src_dest, msg);
-		break;
-	case SEND:
-	case RECEIVE:
-		ret = sendrec(function, src_dest, msg);
-		break;
-	default:
-		assert((function == BOTH) ||
-		       (function == SEND) || (function == RECEIVE));
-		break;
-	}
+PUBLIC int dev_open(int drive){
+	int ret = 0;
 
+	MESSAGE msg;
+	reset_msg(&msg);
+	msg.type = DEV_OPEN;
+	msg.u.m1.mli1 = drive;
+	ret = sendrec(SEND, TASK_HD, &msg);
 	return ret;
 }

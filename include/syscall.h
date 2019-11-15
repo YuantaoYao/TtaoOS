@@ -27,8 +27,8 @@ struct mess3{
 };
 
 typedef struct msg{
-	int source;
-	int type;
+	int source;  //目标进程  如果是发送的话 就是发送对象 如果是接收的话就是 从谁那接收
+	int type;    //进程间通信的函数 enum msgtype
 	union{
 		struct mess1 m1;
 		struct mess2 m2;
@@ -41,6 +41,8 @@ enum msgtype{
 	
 	/* SYS task */
 	GET_TICKS,
+
+	DEV_OPEN,
 };
 
 /***
