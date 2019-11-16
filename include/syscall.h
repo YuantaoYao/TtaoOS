@@ -58,4 +58,5 @@ PUBLIC int sendrec(int function, int src_desc, MESSAGE * msg);
 //格式化消息内存
 PUBLIC void reset_msg(MESSAGE *p);
 
+PUBLIC void dump_msg(const char * title, MESSAGE * m);
 #endif

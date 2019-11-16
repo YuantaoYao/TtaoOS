@@ -39,6 +39,7 @@ PUBLIC void task_hd(){
 				break;
 			}
 			default:
+				dump_msg("HD driver:unKnown msg", &msg);
 				panic("unkown msg type!!");
 				break;
 		}
