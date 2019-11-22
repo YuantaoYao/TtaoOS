@@ -242,7 +242,6 @@ PRIVATE int msg_receive(PROCESS * p_proc, int src, MESSAGE * msg){
 			assert(receiver->p_recvfrom == NO_TASK);
 			assert(receiver->p_sendto == NO_TASK);
 			assert(receiver->first_sending != 0);
-			assert(receiver->next_sending == 0);
 			assert(p_from->p_flags == SENDING);
 			assert(p_from->p_msg != 0);
 			assert(p_from->p_recvfrom == NO_TASK);

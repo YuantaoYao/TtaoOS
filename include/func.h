@@ -17,6 +17,7 @@ PUBLIC void Init8253();
 //读写端口
 PUBLIC void out_port(u16 port, u8 value);
 PUBLIC u8 in_port(u16 port);
+PUBLIC void port_read(u16 port, void* buf, int n);
 
 PUBLIC void kernel_main();
 

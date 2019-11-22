@@ -11,6 +11,7 @@ LD = ld
 d_boot:=boot/
 d_include:=include/
 d_kernel:=kernel/
+d_fs:=fs/
 d_lib:=lib/
 d_floppy:=/mnt/floppy/
 
@@ -35,6 +36,7 @@ image : bootstrap buildimg
 cleanall : 
 	rm -f $(d_boot)*.o $(d_boot)*.bin \
 			  $(d_kernel)*.o $(d_kernel)*.bin\
+			  $(d_fs)*.o $(d_fs)*.bin\
 			  $(d_lib)*.o $(d_lib)*.bin
 	
 # This Program
@@ -59,11 +61,11 @@ bootstrap:
 $(d_kernel)kernel.bin : $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o \
 						$(d_kernel)global.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o	$(d_kernel)8259Aint.o $(d_kernel)main.o $(d_kernel)process.o \
 						${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o $(d_kernel)console.o \
-						$(d_kernel)printf.o $(d_kernel)vsprintf.o $(d_kernel)panic.o $(d_lib)misc.o $(d_kernel)systask.o $(d_kernel)usercall.o $(d_kernel)hd.o
+						$(d_kernel)printf.o $(d_kernel)vsprintf.o $(d_kernel)panic.o $(d_lib)misc.o $(d_kernel)systask.o $(d_kernel)usercall.o $(d_kernel)hd.o $(d_fs)main.o
 	$(LD) $(p_ldflags) -o $@ $(d_kernel)kernel.o $(d_lib)klib.o $(d_kernel)start.o $(d_lib)string.o $(d_lib)kliba.o \
 							 $(d_kernel)global.o $(d_kernel)protect.o $(d_kernel)protectint.o $(d_kernel)8259A.o $(d_kernel)8259Aint.o $(d_kernel)main.o $(d_kernel)process.o \
 							 ${d_kernel}clock.o $(d_kernel)processint.o $(d_kernel)syscall.o $(d_kernel)8253.o $(d_kernel)keyboard.o $(d_kernel)tty.o $(d_kernel)console.o \
-							 $(d_kernel)printf.o $(d_kernel)vsprintf.o $(d_kernel)panic.o $(d_lib)misc.o $(d_kernel)systask.o $(d_kernel)usercall.o $(d_kernel)hd.o
+							 $(d_kernel)printf.o $(d_kernel)vsprintf.o $(d_kernel)panic.o $(d_lib)misc.o $(d_kernel)systask.o $(d_kernel)usercall.o $(d_kernel)hd.o $(d_fs)main.o
 	
 $(d_kernel)kernel.o : $(d_kernel)kernel.asm $(d_kernel)start.c
 	$(ASM) $(p_include) -o $@ $<
@@ -129,6 +131,9 @@ $(d_kernel)usercall.o : $(d_kernel)usercall.c
 	$(CC) $(p_gccflags) -o $@ $<
 	
 $(d_kernel)hd.o : $(d_kernel)hd.c
+	$(CC) $(p_gccflags) -o $@ $<
+
+$(d_fs)main.o : $(d_fs)main.c
 	$(CC) $(p_gccflags) -o $@ $<
 
 

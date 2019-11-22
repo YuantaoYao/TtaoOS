@@ -19,7 +19,7 @@ PUBLIC void kernel_main(){
 	Init_Keyboard();
 	Init_Tty();
 	Init_Hd();
-
+	
 	for(int i=0;i<NR_ALL_TASKS_PROC;i++){
 		proc_table[i].ticks = proc_table[i].priority = 5;
 		proc_table[i].nr_tty = 0;
@@ -89,10 +89,9 @@ void Clean(){
 	}
 	disp_pos=0;
 }
-
 void TestA(){
+	dev_open(0);
 	while(1){
-		dev_open(1);
 		/* printf("<Ticks : %d>.", get_ticks()); */
 		milli_dalay(1000);
 	}
@@ -100,7 +99,7 @@ void TestA(){
 
 void TestB(){
 	while(1){
-		dev_open(2);
+		//dev_open(2);
 		/* printf("<Ticks : %d>.", get_ticks()); */
 		milli_dalay(1000);
 	}

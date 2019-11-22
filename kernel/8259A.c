@@ -39,29 +39,34 @@ PUBLIC void put_irq_handler(int irq, irq_handler handler){
 }
 
 PUBLIC void disable_irq(int irq){ //关闭制定的中断
-	
-	u8 ocw1 = 1 << irq;
 	u8 temp = 0;
 	if(irq < 8){
+		u8 ocw1 = 1 << irq;
 		temp = in_port(INT_M_CTLMASK);
 		ocw1 = ocw1 | temp;
-		out_port(INT_M_CTLMASK, ocw1);
+		out_port(INT_M_CTLMASK, ocw1);	
 	}else{
+		irq = irq - 8;
+		u8 ocw1 = 1 << irq;
 		temp = in_port(INT_S_CTLMASK);
 		ocw1 = ocw1 | temp;
 		out_port(INT_S_CTLMASK, ocw1);
 	}
+
 }
 
 PUBLIC void enable_irq(int irq){ //打开制定的中断
-	
-	u8 ocw1 = 1 << irq;
+
 	u8 temp = 0;
 	if(irq < 8){
+		u8 ocw1 = 1 << irq;
 		temp = in_port(INT_M_CTLMASK);
 		ocw1 = (u8)~ocw1 & temp;
 		out_port(INT_M_CTLMASK, ocw1);
+		temp = in_port(INT_M_CTLMASK);
 	}else{
+		irq = irq - 8;
+		u8 ocw1 = 1 << irq;
 		temp = in_port(INT_S_CTLMASK);
 		ocw1 = (u8)~ocw1 & temp;
 		out_port(INT_S_CTLMASK, ocw1);

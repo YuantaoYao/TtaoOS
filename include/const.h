@@ -38,6 +38,8 @@
 
 #define STACK_SIZE_TOTAL	STACK_SIZE_TTY_TASK + STACK_SIZE_SYS_TASK + STACK_SIZE_HD_TASK + STACK_SIZE_TESTA + STACK_SIZE_TESTB + STACK_SIZE_TESTC
 
+#define INTERRUPT	-10
+
 #define TASK_TTY	0
 #define TASK_SYS	1
 #define TASK_HD		2
@@ -45,6 +47,10 @@
 #define TASK_TESTA	3
 #define TASK_TESTB	4
 #define TASK_TESTC	5
+
+#define ANY (NR_ALL_TASKS_PROC + 10)
+#define NO_TASK (NR_ALL_TASKS_PROC + 20)
+
 
 /*权限 */
 #define	PRIVILEGE_KRNL	0 /* */
@@ -188,14 +194,6 @@
 #define SCR_DN			-1
 #define SCREEN_SIZE		(25 * 80)
 
-#define INTERRUPT	-10
-#define	TASK_TTY	0
-#define	TASK_SYS	1
-#define TASK_HD		2
-
-
-#define ANY (NR_ALL_TASKS_PROC + 10)
-#define NO_TASK (NR_ALL_TASKS_PROC + 20)
 
 
 /* Color */

@@ -49,7 +49,7 @@ global hwint0F
 	call save ;保持寄存器状态
 	
 	in al, INT_M_CTLMASK
-	or al, (1 << %1)					;关闭时钟中断
+	or al, (1 << %1)					;关闭中断
 	out INT_M_CTLMASK, al
 	
 	mov al, EOI
@@ -66,11 +66,12 @@ global hwint0F
 	cli ;关闭中断 此后不再接受其他中断请求
 	
 	in al, INT_M_CTLMASK
-	and al, ~(1 << %1)		;打开时钟中断
+	and al, ~(1 << %1)		;打开中断
 	out INT_M_CTLMASK, al
 	
 	ret ;相当于 pop IP
 %endmacro 
+
 
 ALIGN 16
 hwint00: ;时钟中断
@@ -82,56 +83,85 @@ hwint01: ;键盘中断
 	
 ALIGN 16
 hwint02:
-	irq_master 2
+	hwint_master 2
 	
 ALIGN 16
 hwint03:
-	irq_master 3
+	hwint_master 3
 	
 ALIGN 16
 hwint04:
-	irq_master 4
+	hwint_master 4
 	
 ALIGN 16
 hwint05:
-	irq_master 5
+	hwint_master 5
 	
 ALIGN 16
 hwint06:
-	irq_master 6
+	hwint_master 6
 	
 ALIGN 16
 hwint07:
-	irq_master 7
+	hwint_master 7
+
+%macro hwint_slave 1
+	call save ;保持寄存器状态
 	
+	in al, INT_S_CTLMASK
+	or al, (1 << (%1 - 8))					;关闭中断
+	out INT_S_CTLMASK, al
+	
+	mov al, EOI
+	out INT_M_CTL, al   ;置位EOI master
+	nop
+	out INT_S_CTL, al   ;置位EOI slave
+	sti ;默认中断是不打开的 为了在程序执行过程中能够接受其他中断
+	
+; 切换进程----start----
+
+	push %1
+	call [irq_table + %1 * 4]
+	add esp, 4
+	 
+; 切换进程----end----
+	cli ;关闭中断 此后不再接受其他中断请求
+	
+	in al, INT_S_CTLMASK
+	and al, ~(1 << (%1 - 8))		;打开中断
+	out INT_S_CTLMASK, al
+	
+	ret ;相当于 pop IP
+%endmacro
+
 ALIGN 16
 hwint08:
-	irq_slave 8
+	hwint_slave 8
 	
 ALIGN 16
 hwint09:
-	irq_slave 9
+	hwint_slave 9
 
 ALIGN 16
 hwint0A:
-	irq_slave 10
+	hwint_slave 10
 
 ALIGN 16
 hwint0B:
-	irq_slave 11
+	hwint_slave 11
 
 ALIGN 16
 hwint0C:
-	irq_slave 12
+	hwint_slave 12
 
 ALIGN 16
 hwint0D:
-	irq_slave 13
+	hwint_slave 13
 
 ALIGN 16
 hwint0E:
-	irq_slave 14
+	hwint_slave 14
 
 ALIGN 16
 hwint0F:
-	irq_slave 15
+	hwint_slave 15
