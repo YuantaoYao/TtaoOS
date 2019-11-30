@@ -36,7 +36,7 @@ struct hd_cmd{
 PUBLIC void hd_identify(int drive);
 
 #define HD_TIMEOUT		10000
-#define ATA_IDENTIFY 	0xEC
+#define ATA_IDENTIFY 	0xEC /* 发送0xEC的ATA命令可以得到硬盘的详细参数 */
 #define MAKE_DEVICE_REG(lba, drv, lba_highest)(((lba) << 6) 		| \
 												((drv) << 4)		| \
 												(lba_highest & 0xF) | \
