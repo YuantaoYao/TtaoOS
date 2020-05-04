@@ -1,3 +1,5 @@
+#ifndef	_TTAO_TTY_H_
+#define _TTAO_TTY_H_
 #define TTY_IN_BYTES	256 //tty 输入队列大小
 
 struct s_console;
@@ -20,7 +22,9 @@ typedef struct s_console{
 	unsigned int cursor;			 /* 当前光标位置 */	
 }CONSOLE;
 
-#define DEFAULT_CHAR_COLOR 0x05
+#define DEFAULT_CHAR_COLOR (MAKE_COLOR(BLACK, WHITE))
+#define GRAY_CHAR (MAKE_COLOR(BLACK, BLACK) | BRIGHT)
+#define RED_CHAR (MAKE_COLOR(BLUE, RED) | BRIGHT)
 
 PUBLIC int is_current_console(CONSOLE* p_con);
 PUBLIC void out_char(CONSOLE* p_con, char ch);
@@ -30,3 +34,5 @@ PUBLIC void select_console(int nr_console);
 PUBLIC void scroll_screen(CONSOLE* p_con, int directhion);
 PUBLIC void put_a_key(u32 key, TTY* p_tty);
 PUBLIC void init_all_tty();
+
+#endif

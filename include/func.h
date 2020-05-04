@@ -56,4 +56,7 @@ PUBLIC void sys_call();
 PUBLIC int  get_ticks();
 
 PUBLIC void milli_dalay(int milli_sec);
+
+#define proc2pid(x) (x - proc_table)
+
 #endif

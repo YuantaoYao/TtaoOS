@@ -24,14 +24,17 @@ PUBLIC void clock_handler(int irq){
 	PROCESS *p;
 	while(!greatest_ticks){
 		for(p=proc_table;p<(proc_table + NR_ALL_TASKS_PROC);p++){
-			if(p->ticks > greatest_ticks){
-				greatest_ticks = p->ticks;
-				p_proc_ready = p;
+			if(p->p_flags == 0){
+				if(p->ticks > greatest_ticks){
+					greatest_ticks = p->ticks;
+					p_proc_ready = p;
+				}				
 			}
 		}
 		if(!greatest_ticks){
 			for(p=proc_table;p<(proc_table + NR_ALL_TASKS_PROC);p++){
-				p->ticks = p->priority;
+				if(p->p_flags == 0)
+					p->ticks = p->priority;
 			}
 		}
 	}

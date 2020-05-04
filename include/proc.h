@@ -60,6 +60,21 @@ typedef struct s_process{
 	u32 pid;		 //进程号
 	char name[16];	 //进程名称
 	
+	int p_flags;        /* 0 程序正在运行 或 准备运行
+						SENDING 进程处于发送消息状态（进程被阻塞）
+						RECEIVING 进程处于消息接收状态 （进程被阻塞） */
+	
+	struct msg * p_msg; //指向消息体的指针
+	
+	int p_recvfrom; //进程的接收对象
+	int p_sendto;   //进程的发送对象
+	
+	int has_int_msg;  //发送中断置位
+	
+	struct s_process * q_sending;//指向以本进程为发送目标的进程队列的 第一个进程
+	
+	struct s_process * next_sending; // 进程队列的下一个进程
+	
 	int nr_tty;      //定位进程是哪个tty
 }PROCESS;
 
@@ -71,11 +86,11 @@ typedef struct s_task{
 
 extern char task_stack[];
  
-extern PROCESS proc_table[];
+extern PROCESS proc_table[]; //进程表
 
-extern TASK sys_task_table[];
+extern TASK sys_task_table[]; //系统调用任务
 
-extern TASK user_task_table[];
+extern TASK user_task_table[]; //用户调用任务
 
 extern irq_handler irq_table[];
 
@@ -87,7 +102,7 @@ extern CONSOLE console_table[];
 
 extern int cursor_table[];
 
-EXTERN PROCESS* p_proc_ready;
+EXTERN PROCESS* p_proc_ready; //可以指向进程的 进程数据结构指针
 
 EXTERN TSS	tss;
 

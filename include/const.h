@@ -7,6 +7,9 @@
 #define	IDT_SIZE	256
 
 #define LDT_SIZE	2  /* 每个进程中局部描述符的个数 */
+/* descrpitor indices in LDT */
+#define INDEX_LDT_C		0
+#define INDEX_LDT_RW	1
 
 #define NR_IRQ 		16 /* 定义中断数量 两片A8659A */
 
@@ -144,19 +147,61 @@
 #define START_ADDR_L	0xD
 #define CURSOR_H		0xE
 #define CURSOR_L		0xF
-#define V_MEM_BASE		0xB8000
+#define V_MEM_BASE		0xB8000 //显卡内存开始的位置
 #define V_MEM_SIZE		0x8000
 
 /* magic chars used by `printx' */
 #define MAG_CH_PANIC	'\002'
 #define MAG_CH_ASSERT	'\003'
 
+/* Process msg status */
+#define SENDING   	0x02
+#define RECEIVING 	0x04
+
+/* ipc */
+#define SEND		1
+#define RECEIVE		2
+#define BOTH		3 /*BOTH = (SEND | RECEIVE)*/
+
 /* TTY */
 #define NR_CONSOLE	3
 
+/* SCREEN */
+#define SCREEN_WIDTH	80
+#define SCR_UP			1
+#define SCR_DN			-1
+#define SCREEN_SIZE		(25 * 80)
+
+#define INTERRUPT	-10
+
+#define ANY (NR_ALL_TASKS_PROC + 10)
+#define NO_TASK (NR_ALL_TASKS_PROC + 20)
+
+enum msgtype{
+	HARD_INT = 1,
+	
+	/* SYS task */
+	GET_TICKS,
+};
+
+/* Color */
+/*
+ * e.g. MAKE_COLOR(BLUE, RED)
+ *      MAKE_COLOR(BLACK, RED) | BRIGHT
+ *      MAKE_COLOR(BLACK, RED) | BRIGHT | FLASH
+ */
+#define BLACK   0x0     /* 0000 */
+#define WHITE   0x7     /* 0111 */
+#define RED     0x4     /* 0100 */
+#define GREEN   0x2     /* 0010 */
+#define BLUE    0x1     /* 0001 */
+#define FLASH   0x80    /* 1000 0000 */
+#define BRIGHT  0x08    /* 0000 1000 */
+#define	MAKE_COLOR(x,y)	((x<<4) | y) /* MAKE_COLOR(Background,Foreground) */
+
 #define vir2phys(seg_base, vir) (u32)(((u32)seg_base) + (u32)(vir))
 
-#define NR_SYS_CALL     3
+#define NR_SYS_CALL    4
 
 #define INT_TTAO_TEXT	0xA0
 #endif

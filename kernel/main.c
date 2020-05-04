@@ -87,22 +87,18 @@ void Clean(){
 
 void TestA(){
 	MESSAGE * msg;
+	reset_msg(msg);
 	msg->type = 7;
 	while(1){
-	   // printf("ddfsw");
-		// sendrec(1, 2, msg);
-		assert(1!=1);
-		
-		milli_dalay(1000);
-		// disp_str("A.");		
+		sendrec(SEND, 2, msg);
+		milli_dalay(1000);	
 	}
 }
 
 void TestB(){
 
 	while(1){
-		milli_dalay(100);
-		// disp_str("B."); 
+		milli_dalay(100); 
 		
 	}
 }
@@ -110,6 +106,7 @@ void TestB(){
 void TestC(){
 	 
 	while(1){
+		//printf(".D");
 		milli_dalay(100);
 		// disp_str("C.");  
 	}

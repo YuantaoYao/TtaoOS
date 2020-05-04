@@ -28,8 +28,8 @@ PUBLIC void spin(char * func_name)
  *****************************************************************************/
 PUBLIC void assertion_failure(char *exp, char *file, char *base_file, int line)
 {
-	printl( "ASSERT (%s) FILE: %s; BASEFILE: %s; LN: %d",
-	       exp, file, base_file, line);
+	printl( "%c ASSERT (%s) FILE: %s; BASEFILE: %s; LN: %d \n",
+	       MAG_CH_ASSERT, exp, file, base_file, line);
 
 	/**
 	 * If assertion fails in a TASK, the system will halt before

@@ -26,7 +26,7 @@ struct mess3{
 	void* m3p2;
 };
 
-typedef struct{
+typedef struct msg{
 	int source;
 	int type;
 	union{
@@ -38,4 +38,8 @@ typedef struct{
 
 
 PUBLIC void sendrec(int function, int src_desc, MESSAGE * msg);
+
+//格式化消息内存
+PUBLIC void reset_msg(MESSAGE *p);
+
 #endif

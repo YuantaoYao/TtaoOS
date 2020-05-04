@@ -45,12 +45,6 @@
 #define	NUM_LOCK	(0x0F + FLAG_EXT)	/* Number Lock	*/
 #define SCROLL_LOCK	(0x10 + FLAG_EXT)	/* Scroll Lock	*/
 
-/* SCREEN */
-#define SCREEN_WIDTH	80
-#define SCR_UP			1
-#define SCR_DN			-1
-#define SCREEN_SIZE		(25 * 80)
-
 /* Function keys */
 #define F1		(0x11 + FLAG_EXT)	/* F1		*/
 #define F2		(0x12 + FLAG_EXT)	/* F2		*/
